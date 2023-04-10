@@ -1,24 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdbool.h>
-#include <gc.h>
 
-#define MAX_SYMBOL_LENGTH 50
-#define INPUT_BUFFER_LENGTH 256
+#include "trs_lisp.h"
+#include "primitives.h"
 
 #pragma region Tokens
-
-typedef enum TOKENTYPE{
-    openparen, closeparen, tsymbol, tnumber, tstring, quote, eof
-} tokentype;
-
-typedef struct TOKEN{
-    char symbol[MAX_SYMBOL_LENGTH];
-    tokentype type;
-}token;
 
 char *src;
 long srcix=0;
@@ -107,17 +91,6 @@ token getNextToken(){
 #pragma endregion Tokens
 
 #pragma region AST
-
-typedef enum VALTYPE{number, symbol, string, nil} valtype;
-
-typedef struct CELL{
-    long serial;
-    char *symbol;
-    float number;
-    valtype type;
-    struct CELL *contents;
-    struct CELL *next;
-} cell;
 
 cell *newcell(long serial, char *symbol, float number, valtype type){
     cell *n=(cell *)GC_malloc(sizeof(cell));
@@ -218,13 +191,6 @@ bool equivalentCells(cell *a, cell *b){
     return c && n;
 }
 
-typedef struct UNIFIER
-{
-    char *variable;
-    cell *boundterm;
-    struct UNIFIER *next;
-}unifier;
-
 unifier *newunifier(char *variable, cell *bound){
     unifier *u=(unifier *)GC_malloc(sizeof(unifier));
     u->variable=(char *)GC_malloc(strlen(variable)+1);
@@ -279,11 +245,6 @@ unifier *unify(cell *a, cell *b){
     return n;
 }
 
-typedef struct RESOLUTION{
-    unifier *unifier;
-    cell *matchedcell;
-    struct RESOLUTION *next;
-}resolution;
 
 resolution *newResolution(unifier *u, cell *mc){
     resolution *r=(resolution *)GC_malloc(sizeof(resolution));
@@ -438,11 +399,6 @@ cell *parse(){
 
 #pragma region Environment
 
-typedef struct ENVIRONMENT{
-    cell *bindings;
-    cell *lastbinding;
-    struct ENVIRONMENT *parent;
-}environment;
 
 environment *newenvironment(environment *parent){
     environment *n=(environment *)GC_malloc(sizeof(environment));
@@ -482,12 +438,6 @@ cell *getVarBinding(char *var, environment *env){
 
 #pragma region Primitives
 
-typedef struct MACRO{
-    char *name;
-    cell *expression;
-    cell *expansion;
-    struct MACRO *next;
-} macro;
 
 macro *usermacros=NULL;
 
@@ -510,50 +460,7 @@ void addMacro(char *name, cell *expression, cell *expansion){
     }
 }
 
-cell *f_cons(cell *ast, environment *env){
-    if(ast->next){
-        cell *newast=copyCellDeep(ast->next);
-        return newast;
-    }
-    return NULL;
-}
 
-cell *f_car(cell *ast, environment *env){
-    if(ast->next){
-        cell *newast=copyCellDeep(ast->next);
-        newast->next=NULL;
-        return newast;
-    }
-    return NULL;
-}
-
-cell *f_cdr(cell *ast, environment *env){
-    if(ast->next){
-        if(ast->next->next) {
-            cell *newast=copyCellDeep(ast->next->next);
-            return newast;
-        }
-    }
-    return NULL;
-}
-
-cell *f_display(cell *ast, environment *env){
-    if(ast->next){
-        printf("%s", ast->next->symbol);
-    }
-    return NULL;
-}
-
-cell *f_defun(cell *ast, environment *env){
-    if(ast->next){
-        if(ast->next->next) {
-            cell *expression=copyCellDeep(ast->next);
-            cell *expansion=copyCellDeep(ast->next->next);
-            addMacro(ast->symbol, expression, expansion);
-        }
-    }
-    return NULL;
-}
 
 typedef struct PRIMITIVE
 {
@@ -575,19 +482,55 @@ primitive *newPrimitive(char *name, void *func){
 void initPrimitives(){
     primitive *p=NULL;
     primitive *pn=NULL;
-    p=newPrimitive("cons", f_cons);
+    p=newPrimitive("car", f_car);
     primitives=p;
     pn=p;
-    p=newPrimitive("car", f_car);
-    pn->next=p;
-    p=p;
     p=newPrimitive("cdr", f_cdr);
     pn->next=p;
-    p=p;
+    pn=p;
+    p=newPrimitive("char-alphabetic?", f_char_alphabetic);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("char-numeric?", f_char_numeric);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("char-whitespace?", f_char_whitespace);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("char-upper-case?", f_char_upper_case);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("char-lower-case?", f_char_lower_case);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("char->integer", f_char_to_integer);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("cons", f_cons);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("defun", f_defun);
+    pn->next=p;
+    pn=p;
     p=newPrimitive("display", f_display);
     pn->next=p;
-    p=p;
-    p=newPrimitive("function", f_defun);
+    pn=p;
+    p=newPrimitive("integer->char", f_integer_to_char);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("newline", f_newline);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("readchar", f_readchar);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("string?", f_string);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("string-length", f_string_length);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("write", f_write);
 }
 
 primitive *getPrimitive(char *name){
