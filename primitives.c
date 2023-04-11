@@ -7,6 +7,35 @@ cell *f_cond(cell *ast, environment *env){
     return NULL;
 }
 
+
+cell *f_define(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->contents){
+            // define a function macro
+            if(ast->next->next) {
+                cell *expression=copyCellDeep(ast->next);
+                expression->next=NULL;
+                cell *expansion=copyCellDeep(ast->next->next);
+                macro *m=newMacro(ast->next->contents->symbol, expression, expansion);
+                addFunction(m);
+                return NULL;
+            }
+        } else {
+            // define a variable
+            if(ast->next->type==symbol){
+                if(ast->next->next){
+                    bindVar(ast->next->symbol, ast->next->next, env);
+                }
+            }
+        }
+    }
+    return NULL;
+}
+
+cell *f_define_syntax(cell *ast, environment *env){
+    return NULL;
+}
+
 cell *f_do(cell *ast, environment *env){
     return NULL;
 }
@@ -109,18 +138,6 @@ cell *f_cons(cell *ast, environment *env){
     if(ast->next){
         cell *newast=copyCellDeep(ast->next);
         return newast;
-    }
-    return NULL;
-}
-
-cell *f_defun(cell *ast, environment *env){
-    if(ast->next){
-        if(ast->next->next) {
-            cell *expression=copyCellDeep(ast->next);
-            cell *expansion=copyCellDeep(ast->next->next);
-            macro *m=newMacro(ast->symbol, expression, expansion);
-            addFunction(m);
-        }
     }
     return NULL;
 }

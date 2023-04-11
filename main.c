@@ -168,8 +168,6 @@ bool equivalentCells(cell *a, cell *b){
             if(strcmp(a->symbol, b->symbol)){
                 return false;
             }
-        } else {
-            return false;
         }
     } else {
         if(!b->contents){
@@ -208,11 +206,9 @@ unifier *unify(cell *a, cell *b){
             return newunifier(a->symbol, b);
         } else {
             if(!b->contents){
-                if(b->type!=a->type || b->symbol!=a->symbol){
+                if(b->type!=a->type || strcmp(b->symbol,a->symbol)){
                     return NULL;
                 }
-            } else {
-                return NULL;
             }
         }
     } else {
@@ -416,6 +412,7 @@ void bindVar(char *var, cell *bound, environment *env){
         env->lastbinding=binding;
     } else {
         env->lastbinding->next=binding;
+        env->lastbinding=binding;
     }
 } 
 
@@ -520,9 +517,6 @@ void initPrimitiveOps(){
     p=newPrimitive("cons", f_cons);
     pn->next=p;
     pn=p;
-    p=newPrimitive("defun", f_defun);
-    pn->next=p;
-    pn=p;
     p=newPrimitive("display", f_display);
     pn->next=p;
     pn=p;
@@ -549,6 +543,12 @@ void initPrimitiveFuncs(){
     primitive *pn=NULL;
     p=newPrimitive("cond", f_cond);
     primitivefuncs=p;
+    pn=p;
+    p=newPrimitive("define", f_define);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("define-syntax", f_define_syntax);
+    pn->next=p;
     pn=p;
     p=newPrimitive("do", f_do);
     pn->next=p;
@@ -596,7 +596,7 @@ cell *applyFunctions(cell *ast, environment *env){
         bool changed=true;
         while(changed){
             changed=false;
-            macro *m=macros;
+            macro *m=functions;
             while(m){
                 resolution *res=resolve(m->expression, cl);
                 resolution *r=res;
@@ -625,6 +625,12 @@ cell *eval(cell *ast, environment *env){
     cell *x=NULL;
     environment *env2=newenvironment(env);
     if(!ast) return NULL;
+    if(!ast->contents){
+        primitive *f=getPrimitiveFunc(ast->symbol);
+        if(f){
+            return f->f(ast, env);
+        }
+    }
     if(ast->next){
         ast->next=eval(ast->next, env2);
     }

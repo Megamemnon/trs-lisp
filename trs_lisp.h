@@ -70,6 +70,10 @@ typedef struct MACRO{
 cell *newcell(long serial, char *symbol, float number, valtype type);
 cell *copyCellDeep(cell *cl);
 char *getStringfromAST(cell *ast);
+
+void bindVar(char *var, cell *bound, environment *env);
+cell *getVarBinding(char *var, environment *env);
+
 macro *newMacro(char *name, cell *expression, cell *expansion);
 void addMacro(macro *m);
 void addFunction(macro *m);
