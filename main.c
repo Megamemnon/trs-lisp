@@ -436,40 +436,51 @@ cell *getVarBinding(char *var, environment *env){
 
 #pragma endregion Environment
 
-#pragma region Primitives
+#pragma region Macros
 
+macro *macros=NULL;
+macro *functions=NULL;
 
-macro *usermacros=NULL;
-
-
-void addMacro(char *name, cell *expression, cell *expansion){
+macro *newMacro(char *name, cell *expression, cell *expansion){
     macro *m=(macro *)GC_malloc(sizeof(macro));
     m->name=(char *)GC_malloc(strlen(name)+1);
     strcpy(m->name, name);
     m->expression=expression;
     m->expansion=expansion;
     m->next=NULL;
-    if(usermacros){
-        macro *x=usermacros;
+    return m;
+}
+
+void addMacro(macro *m){
+    if(macros){
+        macro *x=macros;
         while(!x->next){
             x=x->next;
         }
         x->next=m;
     } else {
-        usermacros=m;
+        macros=m;
     }
 }
 
+void addFunction(macro *m){
+    if(functions){
+        macro *x=functions;
+        while(!x->next){
+            x=x->next;
+        }
+        x->next=m;
+    } else {
+        functions=m;
+    }
+}
 
+#pragma endregion Macros
 
-typedef struct PRIMITIVE
-{
-    char *name;
-    cell * (*f)(cell *, environment *);
-    struct PRIMITIVE *next;
-} primitive;
+#pragma region Primitives
 
-primitive *primitives=NULL;
+primitive *primitiveops=NULL;
+primitive *primitivefuncs=NULL;
 
 primitive *newPrimitive(char *name, void *func){
     primitive *p=(primitive *)GC_malloc(sizeof(primitive));
@@ -479,11 +490,11 @@ primitive *newPrimitive(char *name, void *func){
     return p;
 }
 
-void initPrimitives(){
+void initPrimitiveOps(){
     primitive *p=NULL;
     primitive *pn=NULL;
     p=newPrimitive("car", f_car);
-    primitives=p;
+    primitiveops=p;
     pn=p;
     p=newPrimitive("cdr", f_cdr);
     pn->next=p;
@@ -533,8 +544,20 @@ void initPrimitives(){
     p=newPrimitive("write", f_write);
 }
 
-primitive *getPrimitive(char *name){
-    primitive *p=primitives;
+void initPrimitiveFuncs(){
+    primitive *p=NULL;
+    primitive *pn=NULL;
+    p=newPrimitive("cond", f_cond);
+    primitivefuncs=p;
+    pn=p;
+    p=newPrimitive("do", f_do);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("let", f_let);
+}
+
+primitive *getPrimitiveOp(char *name){
+    primitive *p=primitiveops;
     while(p){
         if(!strcmp(p->name, name)){
             return p;
@@ -544,8 +567,18 @@ primitive *getPrimitive(char *name){
     return NULL;
 }
 
+primitive *getPrimitiveFunc(char *name){
+    primitive *p=primitivefuncs;
+    while(p){
+        if(!strcmp(p->name, name)){
+            return p;
+        }
+        p=p->next;
+    }
+    return NULL;
+}
 
-// primitives prims[]={
+// primitiveops prims[]={
 // {"cons", f_cons},
 // {"car", f_car},
 // {"cdr", f_cdr},
@@ -557,8 +590,35 @@ primitive *getPrimitive(char *name){
 
 #pragma region Interpreter
 
-cell *transform(cell *ast, cell *env){
-    return ast;
+cell *applyFunctions(cell *ast, environment *env){
+    cell *cl=ast;
+    if(cl){
+        bool changed=true;
+        while(changed){
+            changed=false;
+            macro *m=macros;
+            while(m){
+                resolution *res=resolve(m->expression, cl);
+                resolution *r=res;
+                while (r){
+                    cell *expansion=copyCellDeep(m->expansion);
+                    unifier *u=r->unifier;
+                    while(u){
+                        applyUnifier(expansion, u);
+                        u=u->next;
+                    }
+                    changed=true;
+                    if(r->matchedcell->serial==cl->serial){
+                        cl=expansion;
+                    } else {
+                        replaceNode(m->expression, expansion, cl);
+                    }
+                }
+                m=m->next;
+            }
+        }
+    }
+    return cl;
 }
 
 cell *eval(cell *ast, environment *env){
@@ -577,7 +637,7 @@ cell *eval(cell *ast, environment *env){
             ast->number=x->number;
             ast->contents=x->contents;
         } else {
-            primitive *p=getPrimitive(ast->symbol);
+            primitive *p=getPrimitiveOp(ast->symbol);
             if(p){
                 p->f(ast, env2);
             }  
@@ -597,9 +657,11 @@ void interpret(environment *env){
     cell *cl=parse();
     char *formula=getStringfromAST(cl);
     printf("Parsing yields: %s\n",formula);
-    eval(cl, env);
+    cell *ast=applyFunctions(cl, env);
+    formula=getStringfromAST(ast);
+    printf("Applying Macros yields: %s\n",formula);
+    eval(ast, env);
 }
-
 
 #pragma endregion Interpreter
 
@@ -654,8 +716,9 @@ void repl(environment *env){
 int main(int argc, char const *argv[])
 {
     GC_init();
-    initPrimitives();
-    printf("tr-lisp \nCopyright (c) 2023 Brian O'Dell\n");
+    initPrimitiveOps();
+    initPrimitiveFuncs();
+    printf("trs-lisp \nCopyright (c) 2023 Brian O'Dell\n");
     environment *env=newenvironment(NULL);
     repl(env);
     return 0;
