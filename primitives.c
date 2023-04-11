@@ -1,7 +1,23 @@
 
 #include "primitives.h"
 
+/* Functions */
 
+cell *f_cond(cell *ast, environment *env){
+    return NULL;
+}
+
+cell *f_do(cell *ast, environment *env){
+    return NULL;
+}
+
+
+cell *f_let(cell *ast, environment *env){
+    return NULL;
+}
+
+
+/* Operators */
 
 cell *f_car(cell *ast, environment *env){
     if(ast->next){
@@ -89,21 +105,22 @@ cell *f_char_to_integer(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_cons(cell *ast, environment *env){
+    if(ast->next){
+        cell *newast=copyCellDeep(ast->next);
+        return newast;
+    }
+    return NULL;
+}
+
 cell *f_defun(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next) {
             cell *expression=copyCellDeep(ast->next);
             cell *expansion=copyCellDeep(ast->next->next);
-            addMacro(ast->symbol, expression, expansion);
+            macro *m=newMacro(ast->symbol, expression, expansion);
+            addFunction(m);
         }
-    }
-    return NULL;
-}
-
-cell *f_cons(cell *ast, environment *env){
-    if(ast->next){
-        cell *newast=copyCellDeep(ast->next);
-        return newast;
     }
     return NULL;
 }

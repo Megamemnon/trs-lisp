@@ -53,6 +53,13 @@ typedef struct ENVIRONMENT{
     struct ENVIRONMENT *parent;
 }environment;
 
+typedef struct PRIMITIVE
+{
+    char *name;
+    cell * (*f)(cell *, environment *);
+    struct PRIMITIVE *next;
+} primitive;
+
 typedef struct MACRO{
     char *name;
     cell *expression;
@@ -63,6 +70,10 @@ typedef struct MACRO{
 cell *newcell(long serial, char *symbol, float number, valtype type);
 cell *copyCellDeep(cell *cl);
 char *getStringfromAST(cell *ast);
-void addMacro(char *name, cell *expression, cell *expansion);
+macro *newMacro(char *name, cell *expression, cell *expansion);
+void addMacro(macro *m);
+void addFunction(macro *m);
+
+
 
 #endif

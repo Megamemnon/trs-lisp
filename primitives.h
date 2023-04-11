@@ -6,6 +6,10 @@
 
 extern long serialctr;
 
+cell *f_cond(cell *ast, environment *env);
+cell *f_do(cell *ast, environment *env);
+cell *f_let(cell *ast, environment *env);
+
 cell *f_car(cell *ast, environment *env);
 cell *f_cdr(cell *ast, environment *env);
 cell *f_char_alphabetic(cell *ast, environment *env);
