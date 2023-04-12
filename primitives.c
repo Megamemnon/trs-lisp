@@ -16,6 +16,11 @@ cell *f_define(cell *ast, environment *env){
                 cell *expression=copyCellDeep(ast->next);
                 expression->next=NULL;
                 cell *expansion=copyCellDeep(ast->next->next);
+                if(expression->contents && expansion->contents 
+                    && !expression->next && !expansion->next){
+                        expression=expression->contents;
+                        expansion=expansion->contents;
+                    }
                 macro *m=newMacro(ast->next->contents->symbol, expression, expansion);
                 addFunction(m);
                 return NULL;
@@ -47,6 +52,60 @@ cell *f_let(cell *ast, environment *env){
 
 
 /* Operators */
+
+cell *f_add(cell *ast, environment *env){
+    float a, b;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    char buffer[20];
+    int n=sprintf(buffer, "%f", a+b);
+    return newcell(serialctr++, buffer, a+b, number);
+}
+
+cell *f_sub(cell *ast, environment *env){
+    float a, b;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    char buffer[20];
+    int n=sprintf(buffer, "%f", a-b);
+    return newcell(serialctr++, buffer, a-b, number);
+}
+
+cell *f_mul(cell *ast, environment *env){
+    float a, b;
+    a=1;b=1;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    char buffer[20];
+    int n=sprintf(buffer, "%f", a*b);
+    return newcell(serialctr++, buffer, a*b, number);
+}
+
+cell *f_div(cell *ast, environment *env){
+    float a, b;
+    a=1;b=1;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    char buffer[20];
+    int n=sprintf(buffer, "%f", a/b);
+    return newcell(serialctr++, buffer, a/b, number);
+}
 
 cell *f_car(cell *ast, environment *env){
     if(ast->next){

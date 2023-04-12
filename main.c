@@ -494,8 +494,20 @@ primitive *newPrimitive(char *name, void *func){
 void initPrimitiveOps(){
     primitive *p=NULL;
     primitive *pn=NULL;
-    p=newPrimitive("car", f_car);
+    p=newPrimitive("+", f_add);
     primitiveops=p;
+    pn=p;
+    p=newPrimitive("-", f_sub);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("*", f_mul);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("/", f_div);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("car", f_car);
+    pn->next=p;
     pn=p;
     p=newPrimitive("cdr", f_cdr);
     pn->next=p;
@@ -540,6 +552,7 @@ void initPrimitiveOps(){
     pn->next=p;
     pn=p;
     p=newPrimitive("write", f_write);
+    pn->next=p;
 }
 
 void initPrimitiveFuncs(){
@@ -596,10 +609,13 @@ primitive *getPrimitiveFunc(char *name){
 
 cell *applyFunctions(cell *ast, environment *env){
     cell *cl=ast;
+    char *before=NULL;
+    char *after=NULL;
     if(cl){
         bool changed=true;
         while(changed){
             changed=false;
+            before=getStringfromAST(cl);
             macro *m=functions;
             while(m){
                 resolution *res=resolve(m->expression, cl);
@@ -615,11 +631,17 @@ cell *applyFunctions(cell *ast, environment *env){
                     if(r->matchedcell->serial==cl->serial){
                         cl=expansion;
                     } else {
-                        replaceNode(m->expression, expansion, cl);
+                        replaceNode(r->matchedcell, expansion, cl);
                     }
                     r=r->next;
                 }
                 m=m->next;
+            }
+            if(changed){
+                after=getStringfromAST(cl);
+                if(!strcmp(before, after)){
+                    changed=false;
+                }
             }
         }
     }
@@ -637,7 +659,12 @@ cell *eval(cell *ast, environment *env){
         }
     }
     if(ast->next){
-        ast->next=eval(ast->next, env2);
+        cell *nextresult=eval(ast->next, env2);
+        if(nextresult->contents && !nextresult->next){
+            ast->next=nextresult->contents;
+        } else {
+            ast->next=nextresult;
+        }
     }
     switch (ast->type)
     {
@@ -650,7 +677,8 @@ cell *eval(cell *ast, environment *env){
         } else {
             primitive *p=getPrimitiveOp(ast->symbol);
             if(p){
-                p->f(ast, env2);
+                cell *opresult= p->f(ast, env2);
+                return opresult;
             }  
         }
         break;
@@ -671,7 +699,11 @@ void interpret(environment *env){
     cell *ast=applyFunctions(cl, env);
     formula=getStringfromAST(ast);
     printf("Applying Macros yields: %s\n",formula);
-    eval(ast, env);
+    cell *r=eval(ast, env);
+    if(r->type!=nil || r->contents || r->next){
+        formula=getStringfromAST(r);
+        printf("\n%s",formula);
+    }
 }
 
 #pragma endregion Interpreter
@@ -709,6 +741,7 @@ void repl(environment *env){
     char in[INPUT_BUFFER_LENGTH];
     bool abort=false;
     while(!abort){
+        printf("\n> ");
         fgets(in, INPUT_BUFFER_LENGTH, stdin);
         if(strcmp(in, "(exit)\n")){
             srcln=strlen(in);

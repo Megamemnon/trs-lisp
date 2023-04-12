@@ -13,6 +13,10 @@ cell *f_do(cell *ast, environment *env);
 cell *f_let(cell *ast, environment *env);
 
 // Operations
+cell *f_add(cell *ast, environment *env);
+cell *f_sub(cell *ast, environment *env);
+cell *f_mul(cell *ast, environment *env);
+cell *f_div(cell *ast, environment *env);
 cell *f_car(cell *ast, environment *env);
 cell *f_cdr(cell *ast, environment *env);
 cell *f_char_alphabetic(cell *ast, environment *env);
