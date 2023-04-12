@@ -73,6 +73,7 @@ token getNextToken(){
             nc=peeknxch();
             t.symbol[symbolix++]=c;
         }
+        t.symbol[symbolix]=0;
         break;
     default:
         t.symbol[symbolix++]=c;
@@ -203,12 +204,14 @@ unifier *unify(cell *a, cell *b){
     unifier *n=NULL;
     if(!a->contents){
         if(a->type==symbol && isupper(a->symbol[0])){
-            return newunifier(a->symbol, b);
+            c=newunifier(a->symbol, b);
         } else {
             if(!b->contents){
                 if(b->type!=a->type || strcmp(b->symbol,a->symbol)){
                     return NULL;
                 }
+            } else {
+                return NULL;
             }
         }
     } else {
@@ -229,7 +232,7 @@ unifier *unify(cell *a, cell *b){
     if(c){
         if(n){
             unifier *x=c;
-            while(x){
+            while(x->next){
                 x=x->next;
             }
             x->next=n;
@@ -313,6 +316,7 @@ void replaceVariable(char *var, cell *rplc, cell *ast){
     if(!ast->contents){
         if(!strcmp(ast->symbol, var)){
             if(!rplc->contents){
+                ast->symbol=(char *) GC_malloc(strlen(rplc->symbol)+1);
                 strcpy(ast->symbol, rplc->symbol);
                 ast->number=rplc->number;
                 ast->type=rplc->type;
@@ -613,6 +617,7 @@ cell *applyFunctions(cell *ast, environment *env){
                     } else {
                         replaceNode(m->expression, expansion, cl);
                     }
+                    r=r->next;
                 }
                 m=m->next;
             }
