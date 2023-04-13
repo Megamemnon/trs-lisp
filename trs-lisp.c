@@ -144,7 +144,11 @@ char *getStringfromAST(cell *ast){
     }
     next=getStringfromAST(ast->next);
     if(next){
-        contlen=strlen(contained);
+        if(contained){
+            contlen=strlen(contained);
+        } else {
+            return next;
+        }
         nexlen=strlen(next);
         temp=(char *)GC_malloc(contlen+nexlen+2);
         strcpy(temp, contained);
@@ -694,12 +698,21 @@ cell *eval(cell *ast, environment *env){
 
 void interpret(environment *env){
     cell *cl=parse();
-    char *formula=getStringfromAST(cl);
+    char *formula=NULL;
+#ifdef DEBUG_VERBOSE
+    formula=getStringfromAST(cl);
     printf("Parsing yields: %s\n",formula);
+#endif
     cell *ast=applyFunctions(cl, env);
+#ifdef DEBUG_VERBOSE
     formula=getStringfromAST(ast);
     printf("Applying Macros yields: %s\n",formula);
+#endif
     cell *r=eval(ast, env);
+    if(!r){
+        printf("\nnil");
+        return;
+    }
     if(r->type!=nil || r->contents || r->next){
         formula=getStringfromAST(r);
         printf("\n%s",formula);
@@ -710,7 +723,7 @@ void interpret(environment *env){
 
 #pragma region File and REPL interfaces
 
-void loadfile(char *filename, environment *env){
+void loadfile(const char *filename, environment *env){
     FILE *f=fopen(filename, "r");
     char c;
     long sz=0;
@@ -726,15 +739,34 @@ void loadfile(char *filename, environment *env){
         f=fopen(filename, "r");
         if(f){
             sz=0;
+            int paren=0;
+            bool hasexpr=false;
             do{
-                memfile[sz++]=fgetc(f);
+                c=fgetc(f);
+                if(c=='('){
+                    paren++;
+                    hasexpr=true;
+                }
+                if(c==')') paren--;
+                if(c==EOF){
+                    memfile[sz++]=0;
+                }else{
+                    memfile[sz++]=c;
+                    if(paren==0 && hasexpr){
+                        memfile[sz]=0;
+                        src=memfile;
+                        srcix=0;
+                        interpret(env);
+                        sz=0;
+                        hasexpr=false;
+                    }
+                }
             }while (c!=EOF);
             fclose(f);
         }
+    } else {
+        printf("\nUnable to load %s", filename);
     }
-    src=memfile;
-    srcix=0;
-    interpret(env);
 }
 
 void repl(environment *env){
@@ -764,6 +796,13 @@ int main(int argc, char const *argv[])
     initPrimitiveFuncs();
     printf("trs-lisp \nCopyright (c) 2023 Brian O'Dell\n");
     environment *env=newenvironment(NULL);
+#ifdef DEBUG
+    loadfile("/home/brian/git/trs-lisp/test.lisp", env);
+#else    
+    if(argc>1){
+        loadfile(argv[1], env);
+    }
+#endif
     repl(env);
     return 0;
 }
