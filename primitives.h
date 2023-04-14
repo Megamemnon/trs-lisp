@@ -5,15 +5,8 @@
 #include "trs_lisp.h"
 
 extern long serialctr;
-// Functions
-cell *f_cond(cell *ast, environment *env);
-cell *f_define(cell *ast, environment *env);
-cell *f_define_syntax(cell *ast, environment *env);
-cell *f_do(cell *ast, environment *env);
-cell *f_let(cell *ast, environment *env);
-cell *f_load(cell *ast, environment *env);
 
-// Operations
+
 cell *f_add(cell *ast, environment *env);
 cell *f_sub(cell *ast, environment *env);
 cell *f_mul(cell *ast, environment *env);
@@ -32,11 +25,17 @@ cell *f_char_whitespace(cell *ast, environment *env);
 cell *f_char_upper_case(cell *ast, environment *env);
 cell *f_char_lower_case(cell *ast, environment *env);
 cell *f_char_to_integer(cell *ast, environment *env);
+cell *f_cond(cell *ast, environment *env);
 cell *f_cons(cell *ast, environment *env);
+cell *f_define(cell *ast, environment *env);
+cell *f_define_syntax(cell *ast, environment *env);
 cell *f_display(cell *ast, environment *env);
+cell *f_do(cell *ast, environment *env);
 cell *f_integer_to_char(cell *ast, environment *env);
+cell *f_let(cell *ast, environment *env);
+cell *f_load(cell *ast, environment *env);
 cell *f_newline(cell *ast, environment *env);
-cell *f_readchar(cell *ast, environment *env);
+cell *f_read_char(cell *ast, environment *env);
 cell *f_string(cell *ast, environment *env);
 cell *f_string_length(cell *ast, environment *env);
 cell *f_write(cell *ast, environment *env);

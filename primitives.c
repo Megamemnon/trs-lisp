@@ -357,7 +357,7 @@ cell *f_newline(cell *ast, environment *env){
     return NULL;
 }
 
-cell *f_readchar(cell *ast, environment *env){
+cell *f_read_char(cell *ast, environment *env){
     char *c=(char *)GC_malloc(2);
     c[0]=getchar();
     cell *cl=newcell(serialctr++, c, 0, string);

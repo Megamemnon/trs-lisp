@@ -488,8 +488,9 @@ void addFunction(macro *m){
 
 #pragma region Primitives
 
-primitive *primitiveops=NULL;
-primitive *primitivefuncs=NULL;
+primitive *primitives=NULL;
+// primitive *primitiveops=NULL;
+// primitive *primitivefuncs=NULL;
 
 primitive *newPrimitive(char *name, void *func){
     primitive *p=(primitive *)GC_malloc(sizeof(primitive));
@@ -499,112 +500,50 @@ primitive *newPrimitive(char *name, void *func){
     return p;
 }
 
-void initPrimitiveOps(){
+
+#define addprim(sym,func)   p->next=newPrimitive(sym, func); p=p->next;
+
+
+void initPrimitives(){
     primitive *p=NULL;
-    primitive *pn=NULL;
-    p=newPrimitive("+", f_add);
-    primitiveops=p;
-    pn=p;
-    p=newPrimitive("-", f_sub);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("*", f_mul);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("/", f_div);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("=", f_equalsign);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("<", f_lessthan);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive(">", f_greaterthan);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("<=", f_lessthanequal);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive(">=", f_greaterthanequal);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("car", f_car);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("cdr", f_cdr);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("char-alphabetic?", f_char_alphabetic);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("char-numeric?", f_char_numeric);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("char-whitespace?", f_char_whitespace);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("char-upper-case?", f_char_upper_case);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("char-lower-case?", f_char_lower_case);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("char->integer", f_char_to_integer);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("cond", f_cond);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("cons", f_cons);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("display", f_display);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("integer->char", f_integer_to_char);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("newline", f_newline);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("readchar", f_readchar);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("string?", f_string);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("string-length", f_string_length);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("write", f_write);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("write-char", f_write_char);
-    pn->next=p;
+    primitives=newPrimitive("+", "f_add");
+    p=primitives;
+    addprim("-",f_sub)
+    addprim("*",f_mul)
+    addprim("/",f_div)
+    addprim("=",f_equalsign)
+    addprim("<",f_lessthan)
+    addprim(">",f_greaterthan)
+    addprim("<=",f_lessthanequal)
+    addprim(">=",f_greaterthanequal)
+    addprim("car",f_car)
+    addprim("cdr",f_cdr)
+    addprim("char-alphabetic?",f_char_alphabetic)
+    addprim("char-numeric?",f_char_numeric)
+    addprim("char-whitespace?",f_char_whitespace)
+    addprim("char-upper-case?",f_char_upper_case)
+    addprim("char-lower-case?",f_char_lower_case)
+    addprim("char->integer",f_char_to_integer)
+    addprim("cond",f_cond)
+    addprim("cons",f_cons)
+    addprim("define",f_define)
+    addprim("define-syntax",f_define_syntax)
+    addprim("display",f_display)
+    addprim("do",f_do)
+    addprim("integer->char",f_integer_to_char)
+    addprim("let",f_let)
+    addprim("load",f_load)
+    addprim("newline",f_newline)
+    addprim("read-char",f_read_char)
+    addprim("string?",f_string)
+    addprim("string-length",f_string_length)
+    addprim("write",f_write)
+    addprim("write-char",f_write_char)
+
 }
 
-void initPrimitiveFuncs(){
-    primitive *p=NULL;
-    primitive *pn=NULL;
-    p=newPrimitive("define", f_define);
-    primitivefuncs=p;
-    pn=p;
-    p=newPrimitive("define-syntax", f_define_syntax);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("do", f_do);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("let", f_let);
-    pn->next=p;
-    pn=p;
-    p=newPrimitive("load", f_load);
-    pn->next=p;
-}
-
-primitive *getPrimitiveOp(char *name){
-    primitive *p=primitiveops;
+primitive *getPrimitive(char *name){
+    primitive *p=primitives;
     while(p){
         if(!strcmp(p->name, name)){
             return p;
@@ -614,16 +553,131 @@ primitive *getPrimitiveOp(char *name){
     return NULL;
 }
 
-primitive *getPrimitiveFunc(char *name){
-    primitive *p=primitivefuncs;
-    while(p){
-        if(!strcmp(p->name, name)){
-            return p;
-        }
-        p=p->next;
-    }
-    return NULL;
-}
+// void initPrimitiveOps(){
+//     primitive *p=NULL;
+//     primitive *pn=NULL;
+//     p=newPrimitive("+", f_add);
+//     primitiveops=p;
+//     pn=p;
+//     p=newPrimitive("-", f_sub);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("*", f_mul);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("/", f_div);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("=", f_equalsign);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("<", f_lessthan);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive(">", f_greaterthan);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("<=", f_lessthanequal);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive(">=", f_greaterthanequal);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("car", f_car);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("cdr", f_cdr);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("char-alphabetic?", f_char_alphabetic);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("char-numeric?", f_char_numeric);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("char-whitespace?", f_char_whitespace);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("char-upper-case?", f_char_upper_case);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("char-lower-case?", f_char_lower_case);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("char->integer", f_char_to_integer);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("cond", f_cond);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("cons", f_cons);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("display", f_display);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("integer->char", f_integer_to_char);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("newline", f_newline);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("readchar", f_readchar);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("string?", f_string);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("string-length", f_string_length);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("write", f_write);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("write-char", f_write_char);
+//     pn->next=p;
+// }
+
+// void initPrimitiveFuncs(){
+//     primitive *p=NULL;
+//     primitive *pn=NULL;
+//     p=newPrimitive("define", f_define);
+//     primitivefuncs=p;
+//     pn=p;
+//     p=newPrimitive("define-syntax", f_define_syntax);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("do", f_do);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("let", f_let);
+//     pn->next=p;
+//     pn=p;
+//     p=newPrimitive("load", f_load);
+//     pn->next=p;
+// }
+
+// primitive *getPrimitiveOp(char *name){
+//     primitive *p=primitiveops;
+//     while(p){
+//         if(!strcmp(p->name, name)){
+//             return p;
+//         }
+//         p=p->next;
+//     }
+//     return NULL;
+// }
+
+// primitive *getPrimitiveFunc(char *name){
+//     primitive *p=primitivefuncs;
+//     while(p){
+//         if(!strcmp(p->name, name)){
+//             return p;
+//         }
+//         p=p->next;
+//     }
+//     return NULL;
+// }
 
 // primitiveops prims[]={
 // {"cons", f_cons},
@@ -682,20 +736,20 @@ cell *eval(cell *ast, environment *env){
     cell *x=NULL;
     environment *env2=newenvironment(env);
     if(!ast) return NULL;
-    if(!ast->contents){
-        primitive *f=getPrimitiveFunc(ast->symbol);
-        if(f){
-            return f->f(ast, env);
-        }
-    }
-    if(ast->next){
-        cell *nextresult=eval(ast->next, env2);
-        if(nextresult->contents && !nextresult->next){
-            ast->next=nextresult->contents;
-        } else {
-            ast->next=nextresult;
-        }
-    }
+    // if(!ast->contents){
+    //     primitive *f=getPrimitiveFunc(ast->symbol);
+    //     if(f){
+    //         return f->f(ast, env);
+    //     }
+    // }
+    // if(ast->next){
+    //     cell *nextresult=eval(ast->next, env2);
+    //     if(nextresult->contents && !nextresult->next){
+    //         ast->next=nextresult->contents;
+    //     } else {
+    //         ast->next=nextresult;
+    //     }
+    // }
     switch (ast->type)
     {
     case symbol:
@@ -705,7 +759,7 @@ cell *eval(cell *ast, environment *env){
             ast->number=x->number;
             ast->contents=x->contents;
         } else {
-            primitive *p=getPrimitiveOp(ast->symbol);
+            primitive *p=getPrimitive(ast->symbol);
             if(p){
                 cell *opresult= p->f(ast, env2);
                 return opresult;
@@ -718,6 +772,14 @@ cell *eval(cell *ast, environment *env){
     default:
         ast->contents=eval(ast->contents, env2);
         break;
+    }
+    if(ast->next){
+        cell *nextresult=eval(ast->next, env2);
+        if(nextresult->contents && !nextresult->next){
+            ast->next=nextresult->contents;
+        } else {
+            ast->next=nextresult;
+        }
     }
     return ast;
 }
@@ -818,8 +880,7 @@ void repl(environment *env){
 int main(int argc, char const *argv[])
 {
     GC_init();
-    initPrimitiveOps();
-    initPrimitiveFuncs();
+    initPrimitives();
     printf("trs-lisp \nCopyright (c) 2023 Brian O'Dell\n");
     environment *env=newenvironment(NULL);
 #ifdef DEBUG
