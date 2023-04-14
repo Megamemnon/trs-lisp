@@ -503,7 +503,6 @@ primitive *newPrimitive(char *name, void *func){
 
 #define addprim(sym,func)   p->next=newPrimitive(sym, func); p=p->next;
 
-
 void initPrimitives(){
     primitive *p=NULL;
     primitives=newPrimitive("+", f_add);
@@ -770,18 +769,28 @@ cell *eval(cell *ast, environment *env){
             if(p){
                 cell *opresult= p->f(ast, env2);
                 return opresult;
-            }  
+            }
         }
         break;
-    case number:
+    case number: case string:
         return ast;
         break;
     default:
-        ast->contents=eval(ast->contents, env2);
+        cell *contentsresult=eval(ast->contents, env2);
+        if(!ast->next){
+            return contentsresult;
+        } else {
+            if(contentsresult->contents && !contentsresult->next){
+                ast->contents=contentsresult->contents;
+            } else {
+                ast->contents=contentsresult;
+            }
+        }
         break;
     }
     if(ast->next){
         cell *nextresult=eval(ast->next, env2);
+        if(!nextresult) return ast;
         if(nextresult->contents && !nextresult->next){
             ast->next=nextresult->contents;
         } else {
@@ -805,7 +814,7 @@ void interpret(environment *env){
 #endif
     cell *r=eval(ast, env);
     if(!r){
-        printf("\nnil");
+        // printf("\nnil");
         return;
     }
     if(r->type!=nil || r->contents || r->next){

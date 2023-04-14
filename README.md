@@ -1,15 +1,15 @@
 # trs-lisp
 Term Rewriting System Lisp  
 
-A dynamically typed lisp-like language based primarily on term rewriting. Functions modify the Abstract Syntax Tree (AST) instead of allocating memory from the heap. A multi-level Environment is provided to enable global and lexically scoped variables.  
+A dynamically typed lisp-like language based primarily on term rewriting and self-modifying code. Functions modify the Abstract Syntax Tree (AST) instead of allocating memory from the heap. A multi-level Environment is provided to enable global and lexically scoped variables.  
 
 ## Term Rewriting
-This project is intended to implement a usable programming language primarily with Term Rewriting. The S-Expression is chosen for the language's syntax because it's easily parsed into an AST. Macros, defined in the source language, identify an Expression and an Expansion. When a Macro Expression matches an S-Expression in the source code, Variables within the Macro Expression are Unified with elements of the matched S-Expression. Those same Variables in The Macro Expansion are then replaced with the Unified values and the result completely replaces the matched S-Expression in the source code.  
+This project is primarily intended to implement a usable programming language primarily with Term Rewriting. The S-Expression is chosen for the language's syntax because it's easily parsed into an AST. Macros, defined in the source language, identify an Expression and an Expansion. When a Macro Expression matches an S-Expression in the source code, Variables within the Macro Expression are Unified with elements of the matched S-Expression. Those same Variables in The Macro Expansion are then replaced with the Unified values and the result completely replaces the matched S-Expression in the source code.  
 
 This method is utilized in two ways...
 
 ### Functions
-Functions are implemented as Macros. The Eval function first looks for matching Functions before proceeding to evaluate Operations. Functions are given priority by Eval, which will otherwise try to work from the leaf nodes back up the AST to the trunk, running Operations as they are encountered so that when any Operation is evaluated, it is guaranteed that all node downstream (toward the leaf nodes) have already been evaluated.
+User Functions are implemented as Macros. These macros modify the AST from the original source code, essentially (perhaps recursively) replacing 'function calls' with primitive operators.
 
 R5RS, this project's source of function and operation names and behaviors (though we will take many liberties), describes one use of **define** as <code>(define ({variable} {formals}) {body})</code>.  
 
@@ -29,10 +29,13 @@ The second use of Term Rewriting Macros will be for parsing source code, prior t
 R5RS describes <code>(define-syntax {keyword} {transformer})</code>.
 
 
+## Self Modifying Code 
+A second objective of this project is to implement a reliable system based on self-modifying code. To this end, instead of allocating memory on the heap or using the stack, this system always works with the AST originally created by parsing the provided source code. Primitive Operations that may be expected to allocate memory dynamically in other languages will modify the AST in trs-lisp, essentially allocating all necessary memory within the existing AST, releasing nodes that are no longer needed, etc.
+
 ## Primitives
 
 ### Operations
-The following R5RS procedures are implemented as primitive operations:
+The following R5RS procedures are implemented as primitive operators:
 - \+ (add)
 - \- (subtract)
 - \* (multiply)
@@ -51,16 +54,15 @@ The following R5RS procedures are implemented as primitive operations:
 - char-lower-case?
 - char->integer
 - cons
-- defun
+- define
+- define-syntax
+- do
 - display
 - integer->char
+- let\
+- load
 - newline
 - readchar
 - string?
 - string-length
 - write
-
-### Functions
-The following R5RS procedures are implemented as primitive funcations:
-- define
-- load
