@@ -3,10 +3,6 @@
 
 /* Functions */
 
-cell *f_cond(cell *ast, environment *env){
-    return NULL;
-}
-
 
 cell *f_define(cell *ast, environment *env){
     if(ast->next){
@@ -42,11 +38,43 @@ cell *f_define_syntax(cell *ast, environment *env){
 }
 
 cell *f_do(cell *ast, environment *env){
-    return NULL;
+    cell *vars=NULL;
+    cell *test=NULL;
+    cell *command=NULL;
+    if(ast->next){
+        if(ast->next->contents){
+            if(ast->next->contents->contents){
+                vars=ast->next->contents->contents;
+            }
+            if(ast->next->contents->next){
+                if(ast->next->contents->next->contents){
+                    test=ast->contents->next->contents;     
+                }
+            }
+            if(ast->next->contents->next->next){
+                command=ast->next->contents->next->next;
+            }
+        }
+    }
+    if(vars && test && command){
+        // setup variables
+        // loop
+        // test
+        // step
+    }
 }
 
 
 cell *f_let(cell *ast, environment *env){
+    return NULL;
+}
+
+cell *f_load(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->type==string || ast->type==symbol){
+            loadfile(ast->symbol, env);
+        }
+    }
     return NULL;
 }
 
@@ -105,6 +133,86 @@ cell *f_div(cell *ast, environment *env){
     char buffer[20];
     int n=sprintf(buffer, "%f", a/b);
     return newcell(serialctr++, buffer, a/b, number);
+}
+
+cell *f_equalsign(cell *ast, environment *env){
+    float a, b;
+    a=0;b=0;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    if(a==b){
+        return newcell(serialctr++, "#t", 0, symbol);
+    } else {
+        return newcell(serialctr++, "#f", 0, symbol);
+    }
+}
+
+cell *f_lessthan(cell *ast, environment *env){
+    float a, b;
+    a=0;b=0;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    if(a<b){
+        return newcell(serialctr++, "#t", 0, symbol);
+    } else {
+        return newcell(serialctr++, "#f", 0, symbol);
+    }
+}
+
+cell *f_greaterthan(cell *ast, environment *env){
+    float a, b;
+    a=0;b=0;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    if(a>b){
+        return newcell(serialctr++, "#t", 0, symbol);
+    } else {
+        return newcell(serialctr++, "#f", 0, symbol);
+    }
+}
+
+cell *f_lessthanequal(cell *ast, environment *env){
+    float a, b;
+    a=0;b=0;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    if(a<=b){
+        return newcell(serialctr++, "#t", 0, symbol);
+    } else {
+        return newcell(serialctr++, "#f", 0, symbol);
+    }
+}
+
+cell *f_greaterthanequal(cell *ast, environment *env){
+    float a, b;
+    a=0;b=0;
+    if(ast->next){
+        a=ast->next->number;
+        if(ast->next->next){
+            b=ast->next->next->number;
+        }
+    }
+    if(a>=b){
+        return newcell(serialctr++, "#t", 0, symbol);
+    } else {
+        return newcell(serialctr++, "#f", 0, symbol);
+    }
 }
 
 cell *f_car(cell *ast, environment *env){
@@ -181,6 +289,7 @@ cell *f_char_lower_case(cell *ast, environment *env){
     return cl;
 }
 
+
 cell *f_char_to_integer(cell *ast, environment *env){
     if(ast->next){
         char c=ast->next->symbol[0];
@@ -191,6 +300,31 @@ cell *f_char_to_integer(cell *ast, environment *env){
         return cl;
     }
     return NULL;
+}
+
+cell *f_cond(cell *ast, environment *env){
+    cell *test=NULL;
+    cell *exp=NULL;
+    while(ast->next)
+    {
+        ast=ast->next;
+        if(ast->contents){
+            if(ast->contents->contents){
+                test=ast->contents->contents;
+            } else {
+                test=ast->contents;
+            }
+            if(ast->contents->next){
+                exp=ast->contents->next;
+                if(!strcmp(test->symbol,"else") || !strcmp(test->symbol, "#t")){
+                    return exp;
+                }
+            } else {
+                return test;
+            }
+        }
+    }    
+    return ast;
 }
 
 cell *f_cons(cell *ast, environment *env){
@@ -257,6 +391,13 @@ cell *f_write(cell *ast, environment *env){
     if(ast->next){
         char *f=getStringfromAST(ast->next);
         printf("%s", f);
+    }
+    return NULL;
+}
+
+cell *f_write_char(cell *ast, environment *env){
+    if(ast->next){
+        printf("%c", ast->next->symbol[0]);
     }
     return NULL;
 }

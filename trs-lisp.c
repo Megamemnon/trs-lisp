@@ -127,10 +127,14 @@ char *getStringfromAST(cell *ast){
     long nexlen;
     if(ast->contents){
         temp=getStringfromAST(ast->contents);
-        contlen=strlen(temp)+2;
+        if(temp){
+            contlen=strlen(temp)+2;
+        } else {
+            contlen=2;
+        }
         contained=GC_malloc(contlen+1);
         contained[0]='(';
-        strcat(contained, temp);
+        if(temp) strcat(contained, temp);
         strcat(contained,")");
     }else{
         if(ast->type==string){
@@ -510,6 +514,21 @@ void initPrimitiveOps(){
     p=newPrimitive("/", f_div);
     pn->next=p;
     pn=p;
+    p=newPrimitive("=", f_equalsign);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("<", f_lessthan);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive(">", f_greaterthan);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("<=", f_lessthanequal);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive(">=", f_greaterthanequal);
+    pn->next=p;
+    pn=p;
     p=newPrimitive("car", f_car);
     pn->next=p;
     pn=p;
@@ -532,6 +551,9 @@ void initPrimitiveOps(){
     pn->next=p;
     pn=p;
     p=newPrimitive("char->integer", f_char_to_integer);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("cond", f_cond);
     pn->next=p;
     pn=p;
     p=newPrimitive("cons", f_cons);
@@ -557,16 +579,16 @@ void initPrimitiveOps(){
     pn=p;
     p=newPrimitive("write", f_write);
     pn->next=p;
+    pn=p;
+    p=newPrimitive("write-char", f_write_char);
+    pn->next=p;
 }
 
 void initPrimitiveFuncs(){
     primitive *p=NULL;
     primitive *pn=NULL;
-    p=newPrimitive("cond", f_cond);
-    primitivefuncs=p;
-    pn=p;
     p=newPrimitive("define", f_define);
-    pn->next=p;
+    primitivefuncs=p;
     pn=p;
     p=newPrimitive("define-syntax", f_define_syntax);
     pn->next=p;
@@ -575,6 +597,10 @@ void initPrimitiveFuncs(){
     pn->next=p;
     pn=p;
     p=newPrimitive("let", f_let);
+    pn->next=p;
+    pn=p;
+    p=newPrimitive("load", f_load);
+    pn->next=p;
 }
 
 primitive *getPrimitiveOp(char *name){

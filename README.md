@@ -37,6 +37,11 @@ The following R5RS procedures are implemented as primitive operations:
 - \- (subtract)
 - \* (multiply)
 - / (divide)
+- =
+- <
+- \>
+- <=
+- \>=
 - car
 - cdr
 - char-alphabetic?
@@ -58,3 +63,4 @@ The following R5RS procedures are implemented as primitive operations:
 ### Functions
 The following R5RS procedures are implemented as primitive funcations:
 - define
+- load

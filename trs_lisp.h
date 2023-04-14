@@ -79,6 +79,6 @@ macro *newMacro(char *name, cell *expression, cell *expansion);
 void addMacro(macro *m);
 void addFunction(macro *m);
 
-
+void loadfile(const char *filename, environment *env);
 
 #endif
