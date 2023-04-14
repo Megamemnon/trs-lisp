@@ -1,0 +1,2 @@
+(define (cadr X) (car (cdr X)))
+(define (caddr X) (car (cdr (cdr X))))

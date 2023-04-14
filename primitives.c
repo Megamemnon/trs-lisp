@@ -143,18 +143,25 @@ cell *f_greaterthanequal(cell *ast, environment *env){
 
 cell *f_car(cell *ast, environment *env){
     if(ast->next){
-        cell *newast=copyCellDeep(ast->next);
-        newast->next=NULL;
-        return eval(newast, env);
+        if(ast->next->contents){
+            cell *car=eval(ast->next->contents, env);
+            car->next=NULL;
+            car=eval(car, env);
+            return car;
+        }
     }
     return NULL;
 }
 
 cell *f_cdr(cell *ast, environment *env){
     if(ast->next){
-        if(ast->next->next) {
-            cell *newast=copyCellDeep(ast->next->next);
-            return eval(newast, env);
+        if(ast->next->contents) {
+            cell *cdr=eval(ast->next->contents, env);
+            if(cdr->next){
+                cdr=cdr->next;
+                cdr=eval(cdr, env);
+                return cdr;
+            }
         }
     }
     return NULL;

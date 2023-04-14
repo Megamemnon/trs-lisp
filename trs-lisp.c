@@ -329,8 +329,7 @@ void replaceVariable(char *var, cell *rplc, cell *ast){
                 ast->number=rplc->number;
                 ast->type=rplc->type;
             } else {
-                ast->contents=copyCellDeep(rplc);
-                ast->type=nil;
+                ast->contents=rplc->contents;
             }
         }
     } else {
@@ -475,7 +474,7 @@ void addMacro(macro *m){
 void addFunction(macro *m){
     if(functions){
         macro *x=functions;
-        while(!x->next){
+        while(x->next){
             x=x->next;
         }
         x->next=m;
@@ -900,10 +899,17 @@ int main(int argc, char const *argv[])
     printf("trs-lisp \nCopyright (c) 2023 Brian O'Dell\n");
     environment *env=newenvironment(NULL);
 #ifdef DEBUG
-    loadfile("/home/brian/git/trs-lisp/test.lisp", env);
+    loadfile("/home/brian/git/trs-lisp/stdlib.trsl", env);
 #else    
-    if(argc>1){
-        loadfile(argv[1], env);
+    int argcounter=1;
+    if(argcounter<argc){
+        int arglen=strlen(argv[argcounter]);
+        if(arglen>5){
+            const char *lastn=&argv[argcounter][arglen-5];
+            if(!strcmp(lastn, ".trsl")){
+                loadfile(argv[argcounter], env);
+            }
+        }
     }
 #endif
     repl(env);
