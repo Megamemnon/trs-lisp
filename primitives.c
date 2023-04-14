@@ -84,10 +84,10 @@ cell *f_load(cell *ast, environment *env){
 cell *f_add(cell *ast, environment *env){
     float a, b;
     if(ast->next){
-        a=ast->next->number;
         if(ast->next->next){
-            b=ast->next->next->number;
+            b=eval(ast->next->next, env)->number;
         }
+        a=eval(ast->next, env)->number;
     }
     char buffer[20];
     int n=sprintf(buffer, "%f", a+b);
@@ -304,20 +304,18 @@ cell *f_char_to_integer(cell *ast, environment *env){
 
 cell *f_cond(cell *ast, environment *env){
     cell *test=NULL;
-    cell *exp=NULL;
     while(ast->next)
     {
         ast=ast->next;
         if(ast->contents){
             if(ast->contents->contents){
-                test=ast->contents->contents;
+                test=eval(ast->contents->contents, env);
             } else {
-                test=ast->contents;
+                test=eval(ast->contents, env);
             }
             if(ast->contents->next){
-                exp=ast->contents->next;
                 if(!strcmp(test->symbol,"else") || !strcmp(test->symbol, "#t")){
-                    return exp;
+                    return eval(ast->contents->next, env);
                 }
             } else {
                 return test;
@@ -337,7 +335,7 @@ cell *f_cons(cell *ast, environment *env){
 
 cell *f_display(cell *ast, environment *env){
     if(ast->next){
-        printf("%s", ast->next->symbol);
+        printf("%s", eval(ast->next, env)->symbol);
     }
     return NULL;
 }
@@ -389,7 +387,7 @@ cell *f_string_length(cell *ast, environment *env){
 
 cell *f_write(cell *ast, environment *env){
     if(ast->next){
-        char *f=getStringfromAST(ast->next);
+        char *f=getStringfromAST(eval(ast->next, env));
         printf("%s", f);
     }
     return NULL;

@@ -506,7 +506,7 @@ primitive *newPrimitive(char *name, void *func){
 
 void initPrimitives(){
     primitive *p=NULL;
-    primitives=newPrimitive("+", "f_add");
+    primitives=newPrimitive("+", f_add);
     p=primitives;
     addprim("-",f_sub)
     addprim("*",f_mul)
@@ -753,11 +753,18 @@ cell *eval(cell *ast, environment *env){
     switch (ast->type)
     {
     case symbol:
-        x=getVarBinding(ast->symbol, env);
+        x=copyCellDeep(getVarBinding(ast->symbol, env));
         if(x){
-            ast->symbol=x->symbol;
-            ast->number=x->number;
-            ast->contents=x->contents;
+            if(!x->next){
+                x->next=ast->next;
+                ast=x;
+            } else {
+                if(!ast->next){
+                    ast=x;
+                } else {
+                    ast->contents=x;
+                }
+            }
         } else {
             primitive *p=getPrimitive(ast->symbol);
             if(p){
