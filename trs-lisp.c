@@ -902,7 +902,7 @@ int main(int argc, char const *argv[])
     loadfile("/home/brian/git/trs-lisp/stdlib.trsl", env);
 #else    
     int argcounter=1;
-    if(argcounter<argc){
+    while(argcounter<argc){
         int arglen=strlen(argv[argcounter]);
         if(arglen>5){
             const char *lastn=&argv[argcounter][arglen-5];
@@ -910,6 +910,7 @@ int main(int argc, char const *argv[])
                 loadfile(argv[argcounter], env);
             }
         }
+        argcounter++;
     }
 #endif
     repl(env);

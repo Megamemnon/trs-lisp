@@ -9,8 +9,8 @@
 #include <stdbool.h>
 #include <gc.h>
 
-#define DEBUG
-#define DEBUG_VERBOSE
+// #define DEBUG
+// #define DEBUG_VERBOSE
 
 #define MAX_SYMBOL_LENGTH 50
 #define INPUT_BUFFER_LENGTH 256
