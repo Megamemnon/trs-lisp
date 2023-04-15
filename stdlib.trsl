@@ -1,2 +1,3 @@
 (define (cadr X) (car (cdr X)))
 (define (caddr X) (car (cdr (cdr X))))
+(define (if Test True False) (cond (Test True) (else False)))

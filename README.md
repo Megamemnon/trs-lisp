@@ -32,9 +32,9 @@ R5RS describes <code>(define-syntax {keyword} {transformer})</code>.
 ## Self Modifying Code 
 A second objective of this project is to implement a reliable system of self-modifying code. To this end, instead of allocating memory on the heap or using the stack, this system always works with the AST originally created by parsing the provided source code. Primitive Operations that may be expected to allocate memory dynamically in other languages will modify the AST in trs-lisp, essentially allocating all necessary memory within the existing AST, releasing nodes that are no longer needed, etc.
 
-## Primitives
+## Procedures
 
-### Operations
+### Primitives
 The following R5RS procedures are implemented as primitive operators:
 - \+ (add)
 - \- (subtract)
@@ -59,10 +59,19 @@ The following R5RS procedures are implemented as primitive operators:
 - do
 - display
 - integer->char
-- let\
+- let
+- list 
 - load
 - newline
 - readchar
 - string?
 - string-length
-- write
+- write  
+
+### Macros
+The following R5RS procedures are implemented as macros in stdlib.trsl:  
+
+- cadr  
+- caddr
+- if  
+

@@ -530,6 +530,7 @@ void initPrimitives(){
     addprim("do",f_do)
     addprim("integer->char",f_integer_to_char)
     addprim("let",f_let)
+    addprim("list", f_list)
     addprim("load",f_load)
     addprim("newline",f_newline)
     addprim("read-char",f_read_char)

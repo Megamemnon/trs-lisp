@@ -262,11 +262,9 @@ cell *f_cond(cell *ast, environment *env){
 }
 
 cell *f_cons(cell *ast, environment *env){
-    if(ast->next){
-        cell *newast=eval(ast->next, env);
-        return newast;
-    }
-    return NULL;
+    cell *cons=newcell(serialctr, NULL, 0, nil);
+    cons->contents=eval(ast->next, env);
+    return cons;
 }
 
 cell *f_define(cell *ast, environment *env){
@@ -349,6 +347,12 @@ cell *f_integer_to_char(cell *ast, environment *env){
 
 cell *f_let(cell *ast, environment *env){
     return NULL;
+}
+
+cell *f_list(cell *ast, environment *env){
+    cell *list=newcell(serialctr++, NULL, 0, nil);
+    list->contents=eval(ast->next, env);
+    return list;
 }
 
 cell *f_load(cell *ast, environment *env){
