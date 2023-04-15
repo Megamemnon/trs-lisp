@@ -309,28 +309,64 @@ cell *f_display(cell *ast, environment *env){
 
 cell *f_do(cell *ast, environment *env){
     cell *vars=NULL;
+    cell *v=NULL;
+    cell *step=NULL;
     cell *test=NULL;
+    cell *testresult=NULL;
+    cell *iftrue=NULL;
     cell *command=NULL;
     if(ast->next){
         if(ast->next->contents){
             if(ast->next->contents->contents){
                 vars=ast->next->contents->contents;
             }
-            if(ast->next->contents->next){
-                if(ast->next->contents->next->contents){
-                    test=ast->contents->next->contents;     
+            if(ast->next->next){
+                if(ast->next->next->contents){
+                    test=ast->next->next->contents;
+                    iftrue=test->next;
+                    test->next=NULL;     
                 }
             }
-            if(ast->next->contents->next->next){
-                command=ast->next->contents->next->next;
+            if(ast->next->next->next){
+                command=ast->next->next->next;
             }
         }
     }
     if(vars && test && command){
         // setup variables
+        v=vars;
+        while(v){
+            if(v->contents){
+                cell *init=copyCellDeep(v->contents->next);
+                init->next=NULL;
+                bindVar(v->contents->symbol, eval(init, env), env);
+            }
+            v=v->next;
+        }
         // loop
-        // test
-        // step
+        while(1){
+            // test
+            testresult=eval(test, env);
+            if(testresult->contents && !testresult->next) testresult=testresult->contents;
+            if(!strcmp(testresult->symbol, "#t")){
+                return eval(iftrue, env);
+            } else {
+                eval(copyCellDeep(command), env);
+            }
+            // step
+            v=vars;
+            while(v){
+                if(v->contents){
+                    if(v->next){
+                        if(v->next->next){
+                            step=copyCellDeep(v->next->next);
+                            bindVar(v->contents->symbol,eval(step, env), env);
+                        }
+                    }
+                }
+                v=v->next;
+            }
+        }
     }
     return NULL;
 }

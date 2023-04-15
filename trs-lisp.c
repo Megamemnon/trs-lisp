@@ -901,6 +901,7 @@ int main(int argc, char const *argv[])
     environment *env=newenvironment(NULL);
 #ifdef DEBUG
     loadfile("/home/brian/git/trs-lisp/stdlib.trsl", env);
+    loadfile("/home/brian/git/trs-lisp/test.trsl", env);
 #else    
     int argcounter=1;
     while(argcounter<argc){
