@@ -288,7 +288,9 @@ cell *f_define(cell *ast, environment *env){
             // define a variable
             if(ast->next->type==symbol){
                 if(ast->next->next){
-                    bindVar(eval(ast->next, env)->symbol, eval(ast->next, env)->next, env);
+                    cell *n=copyCellDeep(ast->next);
+                    n->next=NULL;
+                    bindVar(eval(n, env)->symbol, eval(ast->next->next, env), env);
                 }
             }
         }

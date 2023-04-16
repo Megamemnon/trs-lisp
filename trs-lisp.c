@@ -733,7 +733,6 @@ cell *applyFunctions(cell *ast, environment *env){
 
 cell *eval(cell *ast, environment *env){
     cell *x=NULL;
-    environment *env2=newenvironment(env);
     if(!ast) return NULL;
     // if(!ast->contents){
     //     primitive *f=getPrimitiveFunc(ast->symbol);
@@ -767,7 +766,7 @@ cell *eval(cell *ast, environment *env){
         } else {
             primitive *p=getPrimitive(ast->symbol);
             if(p){
-                cell *opresult= p->f(ast, env2);
+                cell *opresult= p->f(ast, env);
                 return opresult;
             }
         }
@@ -776,7 +775,7 @@ cell *eval(cell *ast, environment *env){
         return ast;
         break;
     default:
-        cell *contentsresult=eval(ast->contents, env2);
+        cell *contentsresult=eval(ast->contents, env);
         if(!ast->next){
             return contentsresult;
         } else {
@@ -789,7 +788,7 @@ cell *eval(cell *ast, environment *env){
         break;
     }
     if(ast->next){
-        cell *nextresult=eval(ast->next, env2);
+        cell *nextresult=eval(ast->next, env);
         if(!nextresult) return ast;
         if(nextresult->contents && !nextresult->next){
             ast->next=nextresult->contents;

@@ -1,2 +1,4 @@
 (define (++ A B C) (+ A (+ B C)) )
 (++ 1 2 3)
+(define x 1)
+(+ x 10)
