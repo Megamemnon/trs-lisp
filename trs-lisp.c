@@ -539,6 +539,8 @@ void initPrimitives(){
     addprim("define-syntax",f_define_syntax)
     addprim("display",f_display)
     addprim("do",f_do)
+    addprim("eqv?", f_eqv)
+    addprim("eq?", f_eqv)
     addprim("integer->char",f_integer_to_char)
     addprim("let",f_let)
     addprim("list", f_list)

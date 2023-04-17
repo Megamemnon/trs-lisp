@@ -267,6 +267,55 @@ cell *f_cons(cell *ast, environment *env){
     return cons;
 }
 
+bool eqv(cell *a, cell *b){
+    bool c=true;
+    bool n=true;
+    if(!a->contents){
+        if(!b->contents){
+            if(a->type!=b->type) return false;
+            if((a->type==symbol || a->type==string ) && strcmp(a->symbol, b->symbol)) return false;
+            if(a->type==number && a->number!=b->number) return false;
+        }
+    } else {
+        if(!b->contents) return false;
+        c=eqv(a->contents, b->contents);
+    }
+    if(b->next){
+        if(a->next){
+            n=eqv(a->next, b->next);
+        } else {
+            return false;
+        }
+    } else {
+        if(a->next){
+            return false;
+        }
+    }
+    return c && n;
+}
+
+cell *f_eqv(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            if(eqv(eval(ast->next, env), eval(ast->next->next, env))){
+                return newcell(serialctr++, "#t", 0, symbol);
+            }
+        }
+    }
+    return newcell(serialctr++, "#f", 0, symbol);
+}
+
+cell *f_eq(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            if(ast->next->serial==ast->next->next->serial){
+                return newcell(serialctr++, "#t", 0, symbol);
+            }
+        }
+    }
+    return newcell(serialctr++, "#f", 0, symbol);
+}
+
 cell *f_define(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->contents){

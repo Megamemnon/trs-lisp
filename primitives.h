@@ -31,6 +31,8 @@ cell *f_define(cell *ast, environment *env);
 cell *f_define_syntax(cell *ast, environment *env);
 cell *f_display(cell *ast, environment *env);
 cell *f_do(cell *ast, environment *env);
+cell *f_eqv(cell *ast, environment *env);
+cell *f_eq(cell *ast, environment *env);
 cell *f_integer_to_char(cell *ast, environment *env);
 cell *f_let(cell *ast, environment *env);
 cell *f_list(cell *ast, environment *env);

@@ -58,6 +58,8 @@ The following R5RS procedures are implemented as primitive operators:
 - define-syntax
 - do
 - display
+- eqv?
+- eq?
 - integer->char
 - let
 - list 
@@ -74,5 +76,9 @@ The following R5RS procedures are implemented as macros in stdlib.trsl:
 
 - cadr  
 - caddr
+- equal?
 - if  
+- negative?
+- positive?
+- zero?
 
