@@ -64,6 +64,7 @@ The following R5RS procedures are implemented as primitive operators:
 - load
 - newline
 - readchar
+- set!
 - string?
 - string-length
 - write  

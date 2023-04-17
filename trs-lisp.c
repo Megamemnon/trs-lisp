@@ -425,7 +425,18 @@ void bindVar(char *var, cell *bound, environment *env){
         env->lastbinding->next=binding;
         env->lastbinding=binding;
     }
-} 
+}
+
+void setVar(char *var, cell *bound, environment *env){
+    cell *binding=env->bindings;
+    while(binding){
+        if(!strcmp(var, binding->symbol)){
+            binding->contents=bound;
+            return;
+        }
+        binding=binding->next;
+    }
+}
 
 cell *getVarBinding(char *var, environment *env){
     cell *b=env->bindings;
@@ -534,6 +545,7 @@ void initPrimitives(){
     addprim("load",f_load)
     addprim("newline",f_newline)
     addprim("read-char",f_read_char)
+    addprim("set!", f_set)
     addprim("string?",f_string)
     addprim("string-length",f_string_length)
     addprim("write",f_write)
@@ -734,20 +746,6 @@ cell *applyFunctions(cell *ast, environment *env){
 cell *eval(cell *ast, environment *env){
     cell *x=NULL;
     if(!ast) return NULL;
-    // if(!ast->contents){
-    //     primitive *f=getPrimitiveFunc(ast->symbol);
-    //     if(f){
-    //         return f->f(ast, env);
-    //     }
-    // }
-    // if(ast->next){
-    //     cell *nextresult=eval(ast->next, env2);
-    //     if(nextresult->contents && !nextresult->next){
-    //         ast->next=nextresult->contents;
-    //     } else {
-    //         ast->next=nextresult;
-    //     }
-    // }
     switch (ast->type)
     {
     case symbol:

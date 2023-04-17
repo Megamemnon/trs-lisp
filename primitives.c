@@ -319,12 +319,10 @@ cell *f_do(cell *ast, environment *env){
     cell *command=NULL;
     if(ast->next){
         if(ast->next->contents){
-            if(ast->next->contents->contents){
-                vars=ast->next->contents->contents;
-            }
+                vars=ast->next->contents;
             if(ast->next->next){
                 if(ast->next->next->contents){
-                    test=ast->next->next->contents;
+                    test=copyCellDeep(ast->next->next->contents);
                     iftrue=test->next;
                     test->next=NULL;     
                 }
@@ -359,10 +357,10 @@ cell *f_do(cell *ast, environment *env){
             v=vars;
             while(v){
                 if(v->contents){
-                    if(v->next){
-                        if(v->next->next){
-                            step=copyCellDeep(v->next->next);
-                            bindVar(v->contents->symbol,eval(step, env), env);
+                    if(v->contents->next){
+                        if(v->contents->next->next){
+                            step=copyCellDeep(v->contents->next->next);
+                            setVar(v->contents->symbol,eval(step, env), env);
                         }
                     }
                 }
@@ -412,6 +410,15 @@ cell *f_read_char(cell *ast, environment *env){
     c[0]=getchar();
     cell *cl=newcell(serialctr++, c, 0, string);
     return cl;
+}
+
+cell *f_set(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            setVar(eval(ast->next, env)->symbol, eval(ast->next->next, env), env);
+        }
+    }
+    return NULL;
 }
 
 cell *f_string(cell *ast, environment *env){

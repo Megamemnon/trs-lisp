@@ -37,6 +37,7 @@ cell *f_list(cell *ast, environment *env);
 cell *f_load(cell *ast, environment *env);
 cell *f_newline(cell *ast, environment *env);
 cell *f_read_char(cell *ast, environment *env);
+cell *f_set(cell *ast, environment *env);
 cell *f_string(cell *ast, environment *env);
 cell *f_string_length(cell *ast, environment *env);
 cell *f_write(cell *ast, environment *env);

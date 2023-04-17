@@ -73,6 +73,7 @@ cell *copyCellDeep(cell *cl);
 char *getStringfromAST(cell *ast);
 
 void bindVar(char *var, cell *bound, environment *env);
+void setVar(char *var, cell *bound, environment *env);
 cell *getVarBinding(char *var, environment *env);
 
 macro *newMacro(char *name, cell *expression, cell *expansion);
