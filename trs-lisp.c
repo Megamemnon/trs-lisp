@@ -76,14 +76,22 @@ token getNextToken(){
         t.symbol[symbolix]=0;
         break;
     default:
-        t.symbol[symbolix++]=c;
-        t.type=tsymbol;
-        while(!isspace(nc) && !isbreakingchar(nc)){
+        if(c=='#' && (nc=='t' || nc=='f')){
+            t.symbol[0]=c;
+            t.symbol[1]=nc;
+            t.symbol[2]=0;
+            t.type=boolean;
             c=getnxch();
-            nc=peeknxch();
+        } else {
             t.symbol[symbolix++]=c;
+            t.type=tsymbol;
+            while(!isspace(nc) && !isbreakingchar(nc)){
+                c=getnxch();
+                nc=peeknxch();
+                t.symbol[symbolix++]=c;
+            }
+            t.symbol[symbolix]=0;
         }
-        t.symbol[symbolix]=0;
         break;
     }
     return t;
@@ -384,6 +392,9 @@ cell *parse(){
         case tstring:
             node=newcell(serialctr++, t.symbol, 0, string);
             break;
+        case tboolean:
+            node=newcell(serialctr++, t.symbol, 0, boolean);
+            break;
         default:
             node=newcell(serialctr++, t.symbol, 0, symbol);
             break;
@@ -548,10 +559,13 @@ void initPrimitives(){
     addprim("newline",f_newline)
     addprim("read-char",f_read_char)
     addprim("set!", f_set)
+    addprim("string=?", f_string_eq)
     addprim("string?",f_string)
     addprim("string-length",f_string_length)
     addprim("write",f_write)
     addprim("write-char",f_write_char)
+
+    addprim("type", type)
 
 }
 

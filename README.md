@@ -22,12 +22,9 @@ Our **define** has the signature <code>(define ({functionname} {arglist}) {expan
 >into...  
 ><code>(+ 1 (+ 2 3))</code>
 
-
-
 ### Read Macros
 The second use of Term Rewriting Macros will be for parsing source code, prior to the generation of an AST by the language's parser.  
 R5RS describes <code>(define-syntax {keyword} {transformer})</code>.
-
 
 ## Self Modifying Code 
 A second objective of this project is to implement a reliable system of self-modifying code. To this end, instead of allocating memory on the heap or using the stack, this system always works with the AST originally created by parsing the provided source code. Primitive Operations that may be expected to allocate memory dynamically in other languages will modify the AST in trs-lisp, essentially allocating all necessary memory within the existing AST, releasing nodes that are no longer needed, etc.
@@ -35,6 +32,9 @@ A second objective of this project is to implement a reliable system of self-mod
 ## Procedures
 
 ### Primitives
+The following procedures are provided in order to facilitate implentation of other procedures via macros:  
+- type - returns the type of its first argument as a string
+
 The following R5RS procedures are implemented as primitive operators:
 - \+ (add)
 - \- (subtract)
@@ -69,16 +69,24 @@ The following R5RS procedures are implemented as primitive operators:
 - set!
 - string?
 - string-length
+- string=?
 - write  
 
 ### Macros
 The following R5RS procedures are implemented as macros in stdlib.trsl:  
 
+- boolean?
 - cadr  
 - caddr
 - equal?
-- if  
+- if
 - negative?
+- number?
 - positive?
+- string?
+- symbol?
 - zero?
 
+## References
+
+Descriptions of R5RS functions can be found at [Scheme Revised(5) Report on the Algorithmic Language Scheme's Variables and Procedures page](https://www-sop.inria.fr/indes/fp/Bigloo/doc/r5rs-12.html)

@@ -16,7 +16,7 @@
 #define INPUT_BUFFER_LENGTH 256
 
 typedef enum TOKENTYPE{
-    openparen, closeparen, tsymbol, tnumber, tstring, quote, eof
+    openparen, closeparen, tsymbol, tnumber, tstring, tboolean, quote, eof
 } tokentype;
 
 typedef struct TOKEN{
@@ -24,7 +24,7 @@ typedef struct TOKEN{
     tokentype type;
 }token;
 
-typedef enum VALTYPE{number, symbol, string, nil} valtype;
+typedef enum VALTYPE{number, symbol, string, boolean, nil} valtype;
 
 typedef struct CELL{
     long serial;

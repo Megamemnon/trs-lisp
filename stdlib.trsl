@@ -1,8 +1,11 @@
+(define (boolean? X) (string=? (type(X) "boolean")))
 (define (cadr X) (car (cdr X)))
 (define (caddr X) (car (cdr (cdr X))))
 (define (equal? A B) (eqv? A B))
 (define (if Test True False) (cond (Test True) (else False)))
 (define (negative? X) (< X 0))
+(define (number? X) (string=? (type(X) "number")))
 (define (positive? X) (> X 0))
+(define (string? X) (string=? (type(X) "string")))
+(define (symbol? X) (string=? (type(X) "symbol")))
 (define (zero? X) (= X 0))
-

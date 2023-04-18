@@ -1,6 +1,14 @@
 
 #include "primitives.h"
 
+/* custom operators*/
+cell *type(cell *ast, environment *env){
+    if(ast->next){
+        return newcell(serialctr++, eval(ast->next, env)->symbol, 0, symbol);
+    }
+    return NULL;
+}
+
 /* symbol operators */
 
 cell *f_add(cell *ast, environment *env){
@@ -69,9 +77,9 @@ cell *f_equalsign(cell *ast, environment *env){
         a=eval(ast->next, env)->number;
     }
     if(a==b){
-        return newcell(serialctr++, "#t", 0, symbol);
+        return newcell(serialctr++, "#t", 0, boolean);
     } else {
-        return newcell(serialctr++, "#f", 0, symbol);
+        return newcell(serialctr++, "#f", 0, boolean);
     }
 }
 
@@ -85,9 +93,9 @@ cell *f_lessthan(cell *ast, environment *env){
         a=eval(ast->next, env)->number;
     }
     if(a<b){
-        return newcell(serialctr++, "#t", 0, symbol);
+        return newcell(serialctr++, "#t", 0, boolean);
     } else {
-        return newcell(serialctr++, "#f", 0, symbol);
+        return newcell(serialctr++, "#f", 0, boolean);
     }
 }
 
@@ -101,9 +109,9 @@ cell *f_greaterthan(cell *ast, environment *env){
         a=eval(ast->next, env)->number;
     }
     if(a>b){
-        return newcell(serialctr++, "#t", 0, symbol);
+        return newcell(serialctr++, "#t", 0, boolean);
     } else {
-        return newcell(serialctr++, "#f", 0, symbol);
+        return newcell(serialctr++, "#f", 0, boolean);
     }
 }
 
@@ -117,9 +125,9 @@ cell *f_lessthanequal(cell *ast, environment *env){
         a=eval(ast->next, env)->number;
     }
     if(a<=b){
-        return newcell(serialctr++, "#t", 0, symbol);
+        return newcell(serialctr++, "#t", 0, boolean);
     } else {
-        return newcell(serialctr++, "#f", 0, symbol);
+        return newcell(serialctr++, "#f", 0, boolean);
     }
 }
 
@@ -133,9 +141,9 @@ cell *f_greaterthanequal(cell *ast, environment *env){
         a=eval(ast->next, env)->number;
     }
     if(a>=b){
-        return newcell(serialctr++, "#t", 0, symbol);
+        return newcell(serialctr++, "#t", 0, boolean);
     } else {
-        return newcell(serialctr++, "#f", 0, symbol);
+        return newcell(serialctr++, "#f", 0, boolean);
     }
 }
 
@@ -168,7 +176,7 @@ cell *f_cdr(cell *ast, environment *env){
 }
 
 cell *f_char_alphabetic(cell *ast, environment *env){
-    cell *cl=newcell(serialctr++, "#f", 0, symbol);
+    cell *cl=newcell(serialctr++, "#f", 0, boolean);
     if(ast->next){
         if(isalpha(eval(ast->next, env)->symbol[0])){
             strcpy(cl->symbol,"#t");
@@ -179,7 +187,7 @@ cell *f_char_alphabetic(cell *ast, environment *env){
 }
 
 cell *f_char_numeric(cell *ast, environment *env){
-    cell *cl=newcell(serialctr++, "#f", 0, symbol);
+    cell *cl=newcell(serialctr++, "#f", 0, boolean);
     if(ast->next){
         if(isdigit(eval(ast->next, env)->symbol[0])){
             strcpy(cl->symbol,"#t");
@@ -190,7 +198,7 @@ cell *f_char_numeric(cell *ast, environment *env){
 }
 
 cell *f_char_whitespace(cell *ast, environment *env){
-    cell *cl=newcell(serialctr++, "#f", 0, symbol);
+    cell *cl=newcell(serialctr++, "#f", 0, boolean);
     if(ast->next){
         if(isspace(eval(ast->next, env)->symbol[0])){
             strcpy(cl->symbol,"#t");
@@ -201,7 +209,7 @@ cell *f_char_whitespace(cell *ast, environment *env){
 }
 
 cell *f_char_upper_case(cell *ast, environment *env){
-    cell *cl=newcell(serialctr++, "#f", 0, symbol);
+    cell *cl=newcell(serialctr++, "#f", 0, boolean);
     if(ast->next){
         if(isupper(eval(ast->next, env)->symbol[0])){
             strcpy(cl->symbol,"#t");
@@ -212,7 +220,7 @@ cell *f_char_upper_case(cell *ast, environment *env){
 }
 
 cell *f_char_lower_case(cell *ast, environment *env){
-    cell *cl=newcell(serialctr++, "#f", 0, symbol);
+    cell *cl=newcell(serialctr++, "#f", 0, boolean);
     if(ast->next){
         if(islower(eval(ast->next, env)->symbol[0])){
             strcpy(cl->symbol,"#t");
@@ -273,7 +281,7 @@ bool eqv(cell *a, cell *b){
     if(!a->contents){
         if(!b->contents){
             if(a->type!=b->type) return false;
-            if((a->type==symbol || a->type==string ) && strcmp(a->symbol, b->symbol)) return false;
+            if((a->type==symbol || a->type==string || a->type==boolean) && strcmp(a->symbol, b->symbol)) return false;
             if(a->type==number && a->number!=b->number) return false;
         }
     } else {
@@ -298,22 +306,22 @@ cell *f_eqv(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
             if(eqv(eval(ast->next, env), eval(ast->next->next, env))){
-                return newcell(serialctr++, "#t", 0, symbol);
+                return newcell(serialctr++, "#t", 0, boolean);
             }
         }
     }
-    return newcell(serialctr++, "#f", 0, symbol);
+    return newcell(serialctr++, "#f", 0, boolean);
 }
 
 cell *f_eq(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
             if(ast->next->serial==ast->next->next->serial){
-                return newcell(serialctr++, "#t", 0, symbol);
+                return newcell(serialctr++, "#t", 0, boolean);
             }
         }
     }
-    return newcell(serialctr++, "#f", 0, symbol);
+    return newcell(serialctr++, "#f", 0, boolean);
 }
 
 cell *f_define(cell *ast, environment *env){
@@ -335,7 +343,7 @@ cell *f_define(cell *ast, environment *env){
             }
         } else {
             // define a variable
-            if(ast->next->type==symbol){
+            if(ast->next->type==symbol || ast->next->type==string){
                 if(ast->next->next){
                     cell *n=copyCellDeep(ast->next);
                     n->next=NULL;
@@ -470,8 +478,19 @@ cell *f_set(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_string_eq(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            if(!strcmp(ast->next->symbol, ast->next->next->symbol)){
+                return newcell(serialctr++, "#t", 0, boolean);
+            }
+        }
+    }
+    return newcell(serialctr++, "#f", 0, boolean);
+}
+
 cell *f_string(cell *ast, environment *env){
-    cell *cl=newcell(serialctr++, "#f", 0, symbol);
+    cell *cl=newcell(serialctr++, "#f", 0, boolean);
     if(ast->next){
         if(eval(ast->next, env)->type==string){
             strcpy(cl->symbol,"#t");
