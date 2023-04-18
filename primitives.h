@@ -1,7 +1,6 @@
 #ifndef TRS_LISP_PRIMITIVES
 #define TRS_LISP_PRIMITIVES
 
-
 #include "trs_lisp.h"
 
 extern long serialctr;
@@ -26,6 +25,7 @@ cell *f_char_whitespace(cell *ast, environment *env);
 cell *f_char_upper_case(cell *ast, environment *env);
 cell *f_char_lower_case(cell *ast, environment *env);
 cell *f_char_to_integer(cell *ast, environment *env);
+cell *f_close_input_port(cell *ast, environment *env);
 cell *f_cond(cell *ast, environment *env);
 cell *f_cons(cell *ast, environment *env);
 cell *f_define(cell *ast, environment *env);
@@ -39,6 +39,8 @@ cell *f_let(cell *ast, environment *env);
 cell *f_list(cell *ast, environment *env);
 cell *f_load(cell *ast, environment *env);
 cell *f_newline(cell *ast, environment *env);
+cell *f_open_input_file(cell *ast, environment *env);
+cell *f_open_output_file(cell *ast, environment *env);
 cell *f_read_char(cell *ast, environment *env);
 cell *f_set(cell *ast, environment *env);
 cell *f_string_eq(cell *ast, environment *env);

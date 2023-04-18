@@ -9,8 +9,8 @@
 #include <stdbool.h>
 #include <gc.h>
 
-// #define DEBUG
-// #define DEBUG_VERBOSE
+#define DEBUG
+#define DEBUG_VERBOSE
 
 #define MAX_SYMBOL_LENGTH 50
 #define INPUT_BUFFER_LENGTH 256
@@ -24,12 +24,13 @@ typedef struct TOKEN{
     tokentype type;
 }token;
 
-typedef enum VALTYPE{number, symbol, string, boolean, nil} valtype;
+typedef enum VALTYPE{number, symbol, string, boolean, stream, nil} valtype;
 
 typedef struct CELL{
     long serial;
     char *symbol;
     float number;
+    File *stream;
     valtype type;
     struct CELL *contents;
     struct CELL *next;

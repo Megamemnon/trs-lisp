@@ -53,9 +53,10 @@ The following R5RS procedures are implemented as primitive operators:
 - char-upper-case?
 - char-lower-case?
 - char->integer
+- close-input-port
+- close-output-port
 - cons
 - define
-- define-syntax
 - do
 - display
 - eqv?
@@ -65,16 +66,19 @@ The following R5RS procedures are implemented as primitive operators:
 - list 
 - load
 - newline
+- open-input-file
+- open-output-file
 - readchar
 - set!
-- string?
 - string-length
 - string=?
 - write  
 
 ### Macros
-The following R5RS procedures are implemented as macros in stdlib.trsl:  
+The following procedures are implemented in stdlib.trsl:  
+- stream?
 
+The following R5RS procedures are implemented as macros in stdlib.trsl:  
 - boolean?
 - cadr  
 - caddr

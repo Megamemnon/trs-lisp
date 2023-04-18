@@ -6,6 +6,7 @@
 (define (negative? X) (< X 0))
 (define (number? X) (string=? (type(X) "number")))
 (define (positive? X) (> X 0))
+(define (stream? X) (string=? (type(X) "stream")))
 (define (string? X) (string=? (type(X) "string")))
 (define (symbol? X) (string=? (type(X) "symbol")))
 (define (zero? X) (= X 0))

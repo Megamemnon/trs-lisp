@@ -544,6 +544,8 @@ void initPrimitives(){
     addprim("char-upper-case?",f_char_upper_case)
     addprim("char-lower-case?",f_char_lower_case)
     addprim("char->integer",f_char_to_integer)
+    addprim("close-input-port", f_close_input_port)
+    addprim("close-output-port", f_close_input_port)
     addprim("cond",f_cond)
     addprim("cons",f_cons)
     addprim("define",f_define)
@@ -557,6 +559,8 @@ void initPrimitives(){
     addprim("list", f_list)
     addprim("load",f_load)
     addprim("newline",f_newline)
+    addprim("open-input-file", f_open_input_file)
+    addprim("open-output-file", f_open_output_file)
     addprim("read-char",f_read_char)
     addprim("set!", f_set)
     addprim("string=?", f_string_eq)
@@ -832,7 +836,7 @@ void interpret(environment *env){
     }
     if(r->type!=nil || r->contents || r->next){
         formula=getStringfromAST(r);
-        printf("\n%s",formula);
+        printf("\n%s\n",formula);
     }
 }
 

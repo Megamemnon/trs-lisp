@@ -243,6 +243,15 @@ cell *f_char_to_integer(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_close_input_port(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->type==stream){
+            fclose(ast->next->stream);
+        }
+    }
+    return NULL;
+}
+
 cell *f_cond(cell *ast, environment *env){
     cell *test=NULL;
     while(ast->next)
@@ -462,11 +471,42 @@ cell *f_newline(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_open_input_file(cell *ast, environment *env){
+    if(ast->next){
+        char *filename=eval(ast->next, env)->symbol;
+        FILE *f=fopen(filename, "w");
+        cell *cl=newcell(serialctr++, filename, 0, stream);
+        cl->stream=f;
+        return cl;
+    }
+    return NULL;
+}
+
+cell *f_open_output_file(cell *ast, environment *env){
+    if(ast->next){
+        char *filename=eval(ast->next, env)->symbol;
+        FILE *f=fopen(filename, "r");
+        cell *cl=newcell(serialctr++, filename, 0, stream);
+        cl->stream=f;
+        return cl;
+    }
+    return NULL;
+}
+
 cell *f_read_char(cell *ast, environment *env){
     char *c=(char *)GC_malloc(2);
-    c[0]=getchar();
-    cell *cl=newcell(serialctr++, c, 0, string);
-    return cl;
+    c[1]=0;
+    if(!ast->next){
+        c[0]=getchar();
+        cell *cl=newcell(serialctr++, c, c[0], string);
+        return cl;
+    } else {
+        if(ast->next->type==stream){
+            c[0]=fgetc(ast->next->stream);
+            return newcell(serialctr++, c, c[0], string);
+        }
+    }
+    return NULL;
 }
 
 cell *f_set(cell *ast, environment *env){
@@ -522,7 +562,13 @@ cell *f_write(cell *ast, environment *env){
 
 cell *f_write_char(cell *ast, environment *env){
     if(ast->next){
-        printf("%c", eval(ast->next, env)->symbol[0]);
+        if(!ast->next->next){
+            printf("%c", eval(ast->next, env)->symbol[0]);
+        } else {
+            if(ast->next->next->stream){
+                fputc(eval(ast->next, env)->symbol[0], ast->next->next->stream);
+            }
+        }        
     }
     return NULL;
 }
