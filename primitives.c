@@ -370,7 +370,8 @@ cell *f_define_syntax(cell *ast, environment *env){
 
 cell *f_display(cell *ast, environment *env){
     if(ast->next){
-        printf("%s", eval(ast->next, env)->symbol);
+        cell *cl=eval(ast->next, env);
+        printf("%s", cl->symbol);
     }
     return NULL;
 }
@@ -503,6 +504,10 @@ cell *f_open_output_file(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_quote(cell *ast, environment *env){
+    return ast->next;
+}
+
 cell *f_read_char(cell *ast, environment *env){
     char *c=(char *)GC_malloc(2);
     c[1]=0;
@@ -524,7 +529,10 @@ cell *f_read_char(cell *ast, environment *env){
 cell *f_set(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
-            setVar(eval(ast->next, env)->symbol, eval(ast->next->next, env), env);
+            cell *var=eval(ast->next, env);
+            cell *val=copyCellDeep(eval(ast->next->next, env));
+            if(var->contents) var=var->contents;
+            setVar(var->symbol, val, env);
         }
     }
     return NULL;

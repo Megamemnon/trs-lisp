@@ -42,6 +42,7 @@ cell *f_load(cell *ast, environment *env);
 cell *f_newline(cell *ast, environment *env);
 cell *f_open_input_file(cell *ast, environment *env);
 cell *f_open_output_file(cell *ast, environment *env);
+cell *f_quote(cell *ast, environment *env);
 cell *f_read_char(cell *ast, environment *env);
 cell *f_set(cell *ast, environment *env);
 cell *f_string_eq(cell *ast, environment *env);

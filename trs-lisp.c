@@ -563,6 +563,7 @@ void initPrimitives(){
     addprim("newline",f_newline)
     addprim("open-input-file", f_open_input_file)
     addprim("open-output-file", f_open_output_file)
+    addprim("'", f_quote)
     addprim("read-char",f_read_char)
     addprim("set!", f_set)
     addprim("string=?", f_string_eq)
