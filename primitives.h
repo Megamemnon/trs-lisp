@@ -32,6 +32,7 @@ cell *f_define(cell *ast, environment *env);
 cell *f_define_syntax(cell *ast, environment *env);
 cell *f_display(cell *ast, environment *env);
 cell *f_do(cell *ast, environment *env);
+cell *f_eof_object(cell *ast, environment *env);
 cell *f_eqv(cell *ast, environment *env);
 cell *f_eq(cell *ast, environment *env);
 cell *f_integer_to_char(cell *ast, environment *env);

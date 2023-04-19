@@ -120,6 +120,7 @@ cell *newcell(long serial, char *symbol, float number, valtype type){
 cell *copyCellDeep(cell *cl){
     if(!cl) return NULL;
     cell *newcl=newcell(cl->serial, cl->symbol, cl->number, cl->type);
+    newcl->stream=cl->stream;
     newcl->contents=copyCellDeep(cl->contents);
     newcl->next=copyCellDeep(cl->next);
     return newcl;
@@ -552,6 +553,7 @@ void initPrimitives(){
     addprim("define-syntax",f_define_syntax)
     addprim("display",f_display)
     addprim("do",f_do)
+    addprim("eof-object?", f_eof_object)
     addprim("eqv?", f_eqv)
     addprim("eq?", f_eqv)
     addprim("integer->char",f_integer_to_char)

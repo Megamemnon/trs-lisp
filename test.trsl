@@ -1,4 +1,2 @@
-(define (++ A B C) (+ A (+ B C)) )
-(++ 1 2 3)
-(define x 1)
-(+ x 10)
+(define f (open-input-file "/home/brian/git/trs-lisp/test.trsl"))
+(do ((c (read-char f) (set! c (read-char f)))) ((eof-object? c)(display "done")) (display c))

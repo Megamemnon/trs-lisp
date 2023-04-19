@@ -437,6 +437,16 @@ cell *f_do(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_eof_object(cell *ast, environment *env){
+    if(ast->next){
+        cell *cl=eval(ast->next, env);
+        if(cl->symbol[0]==EOF){
+            return newcell(serialctr++, "#t", 0, boolean);
+        }
+    }
+    return newcell(serialctr++, "#f", 0, boolean);
+}
+
 cell *f_integer_to_char(cell *ast, environment *env){
     if(ast->next){
         char *c=(char *)GC_malloc(2);
@@ -474,7 +484,7 @@ cell *f_newline(cell *ast, environment *env){
 cell *f_open_input_file(cell *ast, environment *env){
     if(ast->next){
         char *filename=eval(ast->next, env)->symbol;
-        FILE *f=fopen(filename, "w");
+        FILE *f=fopen(filename, "r");
         cell *cl=newcell(serialctr++, filename, 0, stream);
         cl->stream=f;
         return cl;
@@ -485,7 +495,7 @@ cell *f_open_input_file(cell *ast, environment *env){
 cell *f_open_output_file(cell *ast, environment *env){
     if(ast->next){
         char *filename=eval(ast->next, env)->symbol;
-        FILE *f=fopen(filename, "r");
+        FILE *f=fopen(filename, "w");
         cell *cl=newcell(serialctr++, filename, 0, stream);
         cl->stream=f;
         return cl;
@@ -501,8 +511,10 @@ cell *f_read_char(cell *ast, environment *env){
         cell *cl=newcell(serialctr++, c, c[0], string);
         return cl;
     } else {
-        if(ast->next->type==stream){
-            c[0]=fgetc(ast->next->stream);
+        cell *st=eval(ast->next, env);
+        if(st->type==stream){
+            int ci=fgetc(st->stream);
+            c[0]=(char )ci;
             return newcell(serialctr++, c, c[0], string);
         }
     }

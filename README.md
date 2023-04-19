@@ -59,6 +59,7 @@ The following R5RS procedures are implemented as primitive operators:
 - define
 - do
 - display
+- eof-object?
 - eqv?
 - eq?
 - integer->char

@@ -30,7 +30,7 @@ typedef struct CELL{
     long serial;
     char *symbol;
     float number;
-    File *stream;
+    FILE *stream;
     valtype type;
     struct CELL *contents;
     struct CELL *next;
