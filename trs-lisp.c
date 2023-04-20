@@ -212,7 +212,14 @@ unifier *newunifier(char *variable, cell *bound){
     u->variable=(char *)GC_malloc(strlen(variable)+1);
     strcpy(u->variable, variable);
     u->boundterm=copyCellDeep(bound);
+    //Only match S-Expressions, not lists
+    u->boundterm->next=NULL;
     u->next=NULL;
+    return u;
+}
+
+unifier *copyUnifierShallow(unifier *orig){
+    unifier *u = newunifier(orig->variable, orig->boundterm);
     return u;
 }
 
@@ -338,6 +345,9 @@ void replaceVariable(char *var, cell *rplc, cell *ast){
                 ast->number=rplc->number;
                 ast->type=rplc->type;
             } else {
+                ast->symbol=NULL;
+                ast->type=nil;
+                ast->number=0;
                 ast->contents=rplc->contents;
             }
         }
@@ -747,7 +757,9 @@ cell *applyFunctions(cell *ast, environment *env){
                     cell *expansion=copyCellDeep(m->expansion);
                     unifier *u=r->unifier;
                     while(u){
-                        applyUnifier(expansion, u);
+                        unifier *u0=copyUnifierShallow(u);
+                        u0->next=NULL;
+                        applyUnifier(expansion, u0);
                         u=u->next;
                     }
                     changed=true;

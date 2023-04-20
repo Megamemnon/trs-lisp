@@ -4,7 +4,31 @@
 /* custom operators*/
 cell *type(cell *ast, environment *env){
     if(ast->next){
-        return newcell(serialctr++, eval(ast->next, env)->symbol, 0, symbol);
+        cell *e=eval(ast->next, env);
+        switch (e->type)
+        {
+        case boolean:
+            return newcell(serialctr++, "boolean", 0, string);
+            break;
+        case nil:
+            return newcell(serialctr++, "nil", 0, string);
+            break;
+        case number:
+            return newcell(serialctr++, "number", 0, string);
+            break;
+        case stream:
+            return newcell(serialctr++, "stream", 0, string);
+            break;
+        case string:
+            return newcell(serialctr++, "string", 0, string);
+            break;
+        case symbol:
+            return newcell(serialctr++, "symbol", 0, string);
+            break;
+        
+        default:
+            break;
+        }
     }
     return NULL;
 }

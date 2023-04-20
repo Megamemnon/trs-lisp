@@ -1,17 +1,2 @@
-(define f 
-        (open-input-file "/home/brian/git/trs-lisp/test.trsl"))
-(do ((c (read-char f) 
-        (read-char f))) 
-    ((eof-object? c) (newline) 
-                     (display "done")) 
-    (display c))
-(close-input-port f)
-(newline)
 (define t "This is a string")
-(display (string-append "'" 
-                        t 
-                        "'"
-                        " is " 
-                        (number->string (string-length t)) 
-                        " characters long."))
-(newline)
+(if (string? t) (display "string? PASS") (display "string? FAIL"))
