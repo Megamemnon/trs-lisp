@@ -33,6 +33,7 @@ A second objective of this project is to implement a reliable system of self-mod
 
 ### Primitives
 The following procedures are provided in order to facilitate implentation of other procedures via macros:  
+- strcmp - returns the result of a C strcmp of two arguments
 - type - returns the type of its first argument as a string
 
 The following R5RS procedures are implemented as primitive operators:
@@ -67,12 +68,17 @@ The following R5RS procedures are implemented as primitive operators:
 - list 
 - load
 - newline
+- number->string
 - open-input-file
 - open-output-file
+- quote (or just ' )
 - readchar
 - set!
+- string
+- string-append
 - string-length
 - string=?
+- substring
 - write  
 
 ### Macros
@@ -89,6 +95,10 @@ The following R5RS procedures are implemented as macros in stdlib.trsl:
 - number?
 - positive?
 - string?
+- string<?
+- string\>?
+- string<=?
+- string\>=?
 - symbol?
 - zero?
 

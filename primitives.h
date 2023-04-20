@@ -40,14 +40,18 @@ cell *f_let(cell *ast, environment *env);
 cell *f_list(cell *ast, environment *env);
 cell *f_load(cell *ast, environment *env);
 cell *f_newline(cell *ast, environment *env);
+cell *f_number_to_string(cell *ast, environment *env);
 cell *f_open_input_file(cell *ast, environment *env);
 cell *f_open_output_file(cell *ast, environment *env);
 cell *f_quote(cell *ast, environment *env);
 cell *f_read_char(cell *ast, environment *env);
 cell *f_set(cell *ast, environment *env);
+cell *f_strcmp(cell *ast, environment *env);
+cell *f_string_append(cell *ast, environment *env);
 cell *f_string_eq(cell *ast, environment *env);
 cell *f_string(cell *ast, environment *env);
 cell *f_string_length(cell *ast, environment *env);
+cell *f_substring(cell *ast, environment *env);
 cell *f_write(cell *ast, environment *env);
 cell *f_write_char(cell *ast, environment *env);
 

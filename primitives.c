@@ -482,6 +482,19 @@ cell *f_newline(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_number_to_string(cell *ast, environment *env){
+    if(ast->next){
+        cell *cl=eval(ast->next, env);
+        if(cl->type==number){
+            char *buf=(char *)GC_malloc(MAX_SYMBOL_LENGTH);
+            sprintf(buf, "%f", cl->number);
+            return newcell(serialctr++, buf, cl->number, string);
+        }
+        return cl;
+    }
+    return NULL;
+}
+
 cell *f_open_input_file(cell *ast, environment *env){
     if(ast->next){
         char *filename=eval(ast->next, env)->symbol;
@@ -529,8 +542,9 @@ cell *f_read_char(cell *ast, environment *env){
 cell *f_set(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
-            cell *var=eval(ast->next, env);
             cell *val=copyCellDeep(eval(ast->next->next, env));
+            ast->next->next=NULL;
+            cell *var=eval(ast->next, env);
             if(var->contents) var=var->contents;
             setVar(var->symbol, val, env);
         }
@@ -538,10 +552,52 @@ cell *f_set(cell *ast, environment *env){
     return NULL;
 }
 
+cell *f_strcmp(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            cell *b=eval(ast->next->next, env);
+            ast->next->next=NULL;
+            cell *a = eval(ast->next, env);
+            int x=strcmp(a->symbol, b->symbol);
+            return newcell(serialctr++, NULL, x, number);
+        }
+    }
+    return NULL;
+}
+
+cell *f_string_append(cell *ast, environment *env){
+    cell *s=ast->next;
+    cell *cl=NULL;
+    char *str1=NULL; char *str2=NULL;
+    int strl=0; int morel=0;
+    while(s){
+        cl=copyCellDeep(s);
+        cl->next=NULL;
+        cl=eval(cl, env);
+        if(cl->contents && !cl->next) cl=cl->contents;
+        morel=strlen(cl->symbol);
+        str2=(char *)GC_malloc(morel + strl + 1);
+        if(strl>0){
+            strcpy(str2, str1);
+            strcat(str2, cl->symbol);
+        } else {
+            strcpy(str2, cl->symbol);
+        }
+        strl+=morel;
+        str1=str2;
+        s=s->next;
+    }
+    if(strl>0) return newcell(serialctr++, str1, 0, string);
+    return NULL;
+}
+
 cell *f_string_eq(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
-            if(!strcmp(ast->next->symbol, ast->next->next->symbol)){
+            cell *b=eval(ast->next->next, env);
+            ast->next->next=NULL;
+            cell *a=eval(ast->next, env);
+            if(!strcmp(a->symbol, b->symbol)){
                 return newcell(serialctr++, "#t", 0, boolean);
             }
         }
@@ -550,14 +606,7 @@ cell *f_string_eq(cell *ast, environment *env){
 }
 
 cell *f_string(cell *ast, environment *env){
-    cell *cl=newcell(serialctr++, "#f", 0, boolean);
-    if(ast->next){
-        if(eval(ast->next, env)->type==string){
-            strcpy(cl->symbol,"#t");
-            return cl;
-        }
-    }
-    return cl;
+    return f_string_append(ast, env);    
 }
 
 cell *f_string_length(cell *ast, environment *env){
@@ -568,6 +617,26 @@ cell *f_string_length(cell *ast, environment *env){
         buff[n+1]=0;
         cell *cl=newcell(serialctr++, buff, l, number);
         return cl;
+    }
+    return NULL;
+}
+
+cell *f_substring(cell *ast, environment *env){
+    int a, b;
+    cell *cl=ast->next;
+    if(ast->next){
+        if(ast->next->next){
+            if(ast->next->next->next){
+                b=(int )eval(ast->next->next->next, env)->number;
+            }
+            ast->next->next=NULL;
+            a=(int )eval(ast->next, env)->number;
+            cl=eval(cl, env);
+            if(a<=b && b<=strlen(cl->symbol) && b>0){
+                cl->symbol[b]=0;
+                return newcell(serialctr++, cl->symbol[a], 0, string);
+            }
+        }
     }
     return NULL;
 }

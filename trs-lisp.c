@@ -561,14 +561,19 @@ void initPrimitives(){
     addprim("list", f_list)
     addprim("load",f_load)
     addprim("newline",f_newline)
+    addprim("number->string", f_number_to_string)
     addprim("open-input-file", f_open_input_file)
     addprim("open-output-file", f_open_output_file)
     addprim("'", f_quote)
+    addprim("quote", f_quote)
     addprim("read-char",f_read_char)
     addprim("set!", f_set)
+    addprim("strcmp", f_strcmp)
+    addprim("string-append", f_string_append)
     addprim("string=?", f_string_eq)
-    addprim("string?",f_string)
+    addprim("string",f_string)
     addprim("string-length",f_string_length)
+    addprim("substring", f_substring)
     addprim("write",f_write)
     addprim("write-char",f_write_char)
 
@@ -792,29 +797,35 @@ cell *eval(cell *ast, environment *env){
             }
         }
         break;
-    case number: case string:
-        return ast;
+    case number: case string: case boolean:
         break;
     default:
         cell *contentsresult=eval(ast->contents, env);
         if(!ast->next){
             return contentsresult;
         } else {
-            if(contentsresult->contents && !contentsresult->next){
-                ast->contents=contentsresult->contents;
+            if(contentsresult){
+                if(contentsresult->contents && !contentsresult->next){
+                    ast->contents=contentsresult->contents;
+                } else {
+                    ast->contents=contentsresult;
+                }
             } else {
-                ast->contents=contentsresult;
+                ast->contents=NULL;
             }
         }
         break;
     }
     if(ast->next){
         cell *nextresult=eval(ast->next, env);
-        if(!nextresult) return ast;
-        if(nextresult->contents && !nextresult->next){
-            ast->next=nextresult->contents;
+        if(nextresult){
+            if(nextresult->contents && !nextresult->next){
+                ast->next=nextresult->contents;
+            } else {
+                ast->next=nextresult;
+            }
         } else {
-            ast->next=nextresult;
+            ast->next=NULL;
         }
     }
     return ast;
@@ -825,12 +836,12 @@ void interpret(environment *env){
     char *formula=NULL;
 #ifdef DEBUG_VERBOSE
     formula=getStringfromAST(cl);
-    printf("Parsing yields: %s\n",formula);
+    printf("Parsing yields:\n  %s\n",formula);
 #endif
     cell *ast=applyFunctions(cl, env);
 #ifdef DEBUG_VERBOSE
     formula=getStringfromAST(ast);
-    printf("Applying Macros yields: %s\n",formula);
+    printf("Applying Macros yields:\n  %s\n",formula);
 #endif
     cell *r=eval(ast, env);
     if(!r){
