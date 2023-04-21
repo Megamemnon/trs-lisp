@@ -1,0 +1,5 @@
+(define (if Test True False) 
+        (cond (Test True) 
+              (else False)))
+(define (string? X) 
+        (string=? (type X) "string"))

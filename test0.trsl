@@ -1,0 +1,2 @@
+(define t "This is a string")
+(if (string? t) (display "string? PASS") (display "string? FAIL"))
