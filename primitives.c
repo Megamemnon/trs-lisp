@@ -2,7 +2,38 @@
 #include "primitives.h"
 
 /* custom operators*/
-cell *type(cell *ast, environment *env){
+cell *p_ansi_reset(cell *ast, environment *env){
+    printf("\x1b[0m");
+    return NULL;
+}
+
+cell *p_ansi(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[0;%dm", a);
+    }
+    return NULL;
+}
+
+cell *p_exit(cell *ast, environment *env){
+    exit(0);
+}
+
+cell *p_strcmp(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            cell *b=eval(ast->next->next, env);
+            ast->next->next=NULL;
+            cell *a = eval(ast->next, env);
+            int x=strcmp(a->symbol, b->symbol);
+            return newcell(serialctr++, NULL, x, number);
+        }
+    }
+    return NULL;
+}
+
+cell *p_type(cell *ast, environment *env){
     if(ast->next){
         cell *e=eval(ast->next, env);
         switch (e->type)
@@ -98,6 +129,7 @@ cell *f_equalsign(cell *ast, environment *env){
         if(ast->next->next){
             b=eval(ast->next->next, env)->number;
         }
+        ast->next->next=NULL;
         a=eval(ast->next, env)->number;
     }
     if(a==b){
@@ -172,6 +204,12 @@ cell *f_greaterthanequal(cell *ast, environment *env){
 }
 
 /* identifier operations */
+cell *f_begin(cell *ast, environment *env){
+    if(ast->next){
+        return eval(ast->next, env);
+    }
+    return NULL;
+}
 
 cell *f_car(cell *ast, environment *env){
     if(ast->next){
@@ -576,19 +614,6 @@ cell *f_set(cell *ast, environment *env){
     return NULL;
 }
 
-cell *f_strcmp(cell *ast, environment *env){
-    if(ast->next){
-        if(ast->next->next){
-            cell *b=eval(ast->next->next, env);
-            ast->next->next=NULL;
-            cell *a = eval(ast->next, env);
-            int x=strcmp(a->symbol, b->symbol);
-            return newcell(serialctr++, NULL, x, number);
-        }
-    }
-    return NULL;
-}
-
 cell *f_string_append(cell *ast, environment *env){
     cell *s=ast->next;
     cell *cl=NULL;
@@ -651,14 +676,15 @@ cell *f_substring(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
             if(ast->next->next->next){
-                b=(int )eval(ast->next->next->next, env)->number;
+                b=(int )eval(ast->next->next->next, env)->number-1;
             }
-            ast->next->next=NULL;
-            a=(int )eval(ast->next, env)->number;
+            ast->next->next->next=NULL;
+            a=(int )eval(ast->next->next, env)->number-1;
+            cl->next=NULL;
             cl=eval(cl, env);
             if(a<=b && b<=strlen(cl->symbol) && b>0){
                 cl->symbol[b]=0;
-                return newcell(serialctr++, cl->symbol[a], 0, string);
+                return newcell(serialctr++, cl->symbol+a, 0, string);
             }
         }
     }

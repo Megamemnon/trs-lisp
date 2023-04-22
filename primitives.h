@@ -5,7 +5,11 @@
 
 extern long serialctr;
 
-cell *type(cell *ast, environment *env);
+cell *p_ansi_reset(cell *ast, environment *env);
+cell *p_ansi(cell *ast, environment *env);
+cell *p_exit(cell *ast, environment *env);
+cell *p_strcmp(cell *ast, environment *env);
+cell *p_type(cell *ast, environment *env);
 
 cell *f_add(cell *ast, environment *env);
 cell *f_sub(cell *ast, environment *env);
@@ -17,6 +21,7 @@ cell *f_greaterthan(cell *ast, environment *env);
 cell *f_lessthanequal(cell *ast, environment *env);
 cell *f_greaterthanequal(cell *ast, environment *env);
 
+cell *f_begin(cell *ast, environment *env);
 cell *f_car(cell *ast, environment *env);
 cell *f_cdr(cell *ast, environment *env);
 cell *f_char_alphabetic(cell *ast, environment *env);
@@ -46,7 +51,6 @@ cell *f_open_output_file(cell *ast, environment *env);
 cell *f_quote(cell *ast, environment *env);
 cell *f_read_char(cell *ast, environment *env);
 cell *f_set(cell *ast, environment *env);
-cell *f_strcmp(cell *ast, environment *env);
 cell *f_string_append(cell *ast, environment *env);
 cell *f_string_eq(cell *ast, environment *env);
 cell *f_string(cell *ast, environment *env);

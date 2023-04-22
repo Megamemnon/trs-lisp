@@ -74,6 +74,9 @@ token getNextToken(){
             t.symbol[symbolix++]=c;
         }
         t.symbol[symbolix]=0;
+        if(symbolix==1 && t.symbol[0]=='-'){
+            t.type=tsymbol;
+        }
         break;
     default:
         if(c=='#' && (nc=='t' || nc=='f')){
@@ -547,6 +550,7 @@ void initPrimitives(){
     addprim(">",f_greaterthan)
     addprim("<=",f_lessthanequal)
     addprim(">=",f_greaterthanequal)
+    addprim("begin", f_begin)
     addprim("car",f_car)
     addprim("cdr",f_cdr)
     addprim("char-alphabetic?",f_char_alphabetic)
@@ -578,7 +582,6 @@ void initPrimitives(){
     addprim("quote", f_quote)
     addprim("read-char",f_read_char)
     addprim("set!", f_set)
-    addprim("strcmp", f_strcmp)
     addprim("string-append", f_string_append)
     addprim("string=?", f_string_eq)
     addprim("string",f_string)
@@ -587,7 +590,11 @@ void initPrimitives(){
     addprim("write",f_write)
     addprim("write-char",f_write_char)
 
-    addprim("type", type)
+    addprim("ansi", p_ansi)
+    addprim("ansi-reset", p_ansi_reset)
+    addprim("exit", p_exit)
+    addprim("strcmp", p_strcmp)
+    addprim("type", p_type)
 
 }
 
@@ -862,7 +869,7 @@ void interpret(environment *env){
     }
     if(r->type!=nil || r->contents || r->next){
         formula=getStringfromAST(r);
-        printf("\n%s\n",formula);
+        if(formula) printf("\n%s\n",formula);
     }
 }
 

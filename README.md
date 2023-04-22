@@ -33,6 +33,9 @@ A second objective of this project is to implement a reliable system of self-mod
 
 ### Primitives
 The following procedures are provided in order to facilitate implentation of other procedures via macros:  
+- ansi - accepts one numeric argument X and prints ansi code for color X
+- ansi-reset - prints ansi reset code
+- exit - exits with no error
 - strcmp - returns the result of a C strcmp of two arguments
 - type - returns the type of its first argument as a string
 
@@ -46,6 +49,7 @@ The following R5RS procedures are implemented as primitive operators:
 - \>
 - <=
 - \>=
+- begin
 - car
 - cdr
 - char-alphabetic?
