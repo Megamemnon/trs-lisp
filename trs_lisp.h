@@ -9,8 +9,11 @@
 #include <stdbool.h>
 #include <gc.h>
 
+#define R5RS_PRIMITIVES
+
 #define DEBUG
 // #define DEBUG_VERBOSE
+
 
 #define MAX_SYMBOL_LENGTH 50
 #define INPUT_BUFFER_LENGTH 256
