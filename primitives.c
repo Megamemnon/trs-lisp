@@ -213,6 +213,7 @@ cell *f_begin(cell *ast, environment *env){
 
 cell *f_car(cell *ast, environment *env){
     if(ast->next){
+        ast->next=eval(ast->next, env);
         if(ast->next->contents){
             cell *car=eval(ast->next->contents, env);
             car->next=NULL;
@@ -225,6 +226,7 @@ cell *f_car(cell *ast, environment *env){
 
 cell *f_cdr(cell *ast, environment *env){
     if(ast->next){
+        ast->next=eval(ast->next, env);
         if(ast->next->contents) {
             cell *cdr=eval(ast->next->contents, env);
             if(cdr->next){
