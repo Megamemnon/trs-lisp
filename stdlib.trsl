@@ -1,5 +1,5 @@
 (define (boolean? X) 
-        (string=? (type(X) "boolean")))
+        (string=? (type X) "boolean"))
 (define (cadr X) 
         (car (cdr X)))
 (define (caddr X) 
@@ -36,6 +36,6 @@
             #t
             #f))
 (define (symbol? X) 
-        (string=? (type(X) "symbol")))
+        (string=? (type X) "symbol"))
 (define (zero? X) 
         (= X 0))

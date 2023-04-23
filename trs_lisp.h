@@ -12,6 +12,9 @@
 #define R5RS_PRIMITIVES
 
 #define DEBUG
+#define DEBUG_FILE_1 "/home/brian/git/trs-lisp/stdlib.trsl"
+#define DEBUG_FILE_2 "/home/brian/git/trs-lisp/unittests.trsl"
+// #define DEBUG_FILE_2 "/home/brian/git/trs-lisp/test.trsl"
 // #define DEBUG_VERBOSE
 
 

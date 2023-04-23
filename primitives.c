@@ -20,6 +20,10 @@ cell *p_exit(cell *ast, environment *env){
     exit(0);
 }
 
+cell *p_pass(cell *ast, environment *env){
+    return NULL;
+}
+
 cell *p_strcmp(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
@@ -146,7 +150,10 @@ cell *f_lessthan(cell *ast, environment *env){
         if(ast->next->next){
             b=eval(ast->next->next, env)->number;
         }
-        a=eval(ast->next, env)->number;
+        ast->next->next=NULL;
+        cell *cl=eval(ast->next, env);
+        if(cl->contents && !cl->next) cl=cl->contents;
+        a=cl->number;
     }
     if(a<b){
         return newcell(serialctr++, "#t", 0, boolean);
@@ -162,7 +169,10 @@ cell *f_greaterthan(cell *ast, environment *env){
         if(ast->next->next){
             b=eval(ast->next->next, env)->number;
         }
-        a=eval(ast->next, env)->number;
+        ast->next->next=NULL;
+        cell *cl=eval(ast->next, env);
+        if(cl->contents && !cl->next) cl=cl->contents;
+        a=cl->number;
     }
     if(a>b){
         return newcell(serialctr++, "#t", 0, boolean);
@@ -178,7 +188,10 @@ cell *f_lessthanequal(cell *ast, environment *env){
         if(ast->next->next){
             b=eval(ast->next->next,env)->number;
         }
-        a=eval(ast->next, env)->number;
+        ast->next->next=NULL;
+        cell *cl=eval(ast->next, env);
+        if(cl->contents && !cl->next) cl=cl->contents;
+        a=cl->number;
     }
     if(a<=b){
         return newcell(serialctr++, "#t", 0, boolean);
@@ -194,7 +207,10 @@ cell *f_greaterthanequal(cell *ast, environment *env){
         if(ast->next->next){
             b=eval(ast->next->next, env)->number;
         }
-        a=eval(ast->next, env)->number;
+        ast->next->next=NULL;
+        cell *cl=eval(ast->next, env);
+        if(cl->contents && !cl->next) cl=cl->contents;
+        a=cl->number;
     }
     if(a>=b){
         return newcell(serialctr++, "#t", 0, boolean);
@@ -213,7 +229,14 @@ cell *f_begin(cell *ast, environment *env){
 
 cell *f_car(cell *ast, environment *env){
     if(ast->next){
-        ast->next=eval(ast->next, env);
+        cell *cl=eval(ast->next, env);
+        if(!cl->contents && cl->next){
+            cell *a=newcell(serialctr++, NULL, 0, nil);
+            a->contents=cl;
+            ast->next=a;
+        } else {
+            ast->next=cl;
+        }
         if(ast->next->contents){
             cell *car=eval(ast->next->contents, env);
             car->next=NULL;
@@ -226,7 +249,14 @@ cell *f_car(cell *ast, environment *env){
 
 cell *f_cdr(cell *ast, environment *env){
     if(ast->next){
-        ast->next=eval(ast->next, env);
+        cell *cl=eval(ast->next, env);
+        if(!cl->contents && cl->next){
+            cell *a=newcell(serialctr++, NULL, 0, nil);
+            a->contents=cl;
+            ast->next=a;
+        } else {
+            ast->next=cl;
+        }
         if(ast->next->contents) {
             cell *cdr=eval(ast->next->contents, env);
             if(cdr->next){
@@ -378,7 +408,10 @@ bool eqv(cell *a, cell *b){
 cell *f_eqv(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
-            if(eqv(eval(ast->next, env), eval(ast->next->next, env))){
+            cell *b=ast->next->next;
+            ast->next->next=NULL;
+            cell *a=ast->next;
+            if(eqv(eval(a, env), eval(b, env))){
                 return newcell(serialctr++, "#t", 0, boolean);
             }
         }

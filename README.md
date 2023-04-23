@@ -36,6 +36,7 @@ The following procedures are provided in order to facilitate implentation of oth
 - ansi - accepts one numeric argument X and prints ansi code for color X
 - ansi-reset - prints ansi reset code
 - exit - exits with no error
+- noop - do nothing
 - strcmp - returns the result of a C strcmp of two arguments
 - type - returns the type of its first argument as a string
 

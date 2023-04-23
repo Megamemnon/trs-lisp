@@ -594,6 +594,7 @@ void initPrimitives(){
     addprim("ansi", p_ansi)
     addprim("ansi-reset", p_ansi_reset)
     addprim("exit", p_exit)
+    addprim("noop", p_pass)
     addprim("strcmp", p_strcmp)
     addprim("type", p_type)
 #else
@@ -637,6 +638,7 @@ void initPrimitives(){
     addprim("ansi", p_ansi)
     addprim("ansirst", p_ansi_reset)
     addprim("exit", p_exit)
+    addprim("noop", p_pass)
     addprim("strcmp", p_strcmp)
     addprim("type", p_type)
 
@@ -996,8 +998,8 @@ int main(int argc, char const *argv[])
     printf("trs-lisp \nCopyright (c) 2023 Brian O'Dell\n");
     environment *env=newenvironment(NULL);
 #ifdef DEBUG
-    loadfile("/home/brian/git/trs-lisp/stdlib.trsl", env);
-    loadfile("/home/brian/git/trs-lisp/test.trsl", env);
+    loadfile(DEBUG_FILE_1, env);
+    loadfile(DEBUG_FILE_2, env);
 #else    
     int argcounter=1;
     while(argcounter<argc){

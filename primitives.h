@@ -8,6 +8,7 @@ extern long serialctr;
 cell *p_ansi_reset(cell *ast, environment *env);
 cell *p_ansi(cell *ast, environment *env);
 cell *p_exit(cell *ast, environment *env);
+cell *p_pass(cell *ast, environment *env);
 cell *p_strcmp(cell *ast, environment *env);
 cell *p_type(cell *ast, environment *env);
 
