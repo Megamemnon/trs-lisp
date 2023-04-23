@@ -547,16 +547,32 @@ cell *f_eof_object(cell *ast, environment *env){
 
 cell *f_integer_to_char(cell *ast, environment *env){
     if(ast->next){
-        char *c=(char *)GC_malloc(2);
-        c[0]=eval(ast->next, env)->number;
-        cell *cl=newcell(serialctr++, c, 0, string);
+        int c=eval(ast->next, env)->number;
+        char buff[2];
+        buff[0]=(char )c;
+        buff[1]=0;
+        cell *cl=newcell(serialctr++, buff, c, string);
         return cl;
     }
     return NULL;
 }
 
 cell *f_let(cell *ast, environment *env){
-    return NULL;
+    if(ast->next){
+        if(ast->next->next){
+            cell *body=ast->next->next;
+            cell *vars=ast->next->contents;
+            environment *newenv=newenvironment(env);
+            cell *v=vars;
+            while(v){
+                if(v->contents){
+                    bindVar(v->contents->symbol, eval(v->contents->next, env), newenv);
+                }
+                v=v->next;
+            }
+            return eval(body, newenv);
+        }
+    }
 }
 
 cell *f_list(cell *ast, environment *env){

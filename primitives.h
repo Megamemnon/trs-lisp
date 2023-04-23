@@ -25,6 +25,7 @@ cell *f_greaterthanequal(cell *ast, environment *env);
 cell *f_begin(cell *ast, environment *env);
 cell *f_car(cell *ast, environment *env);
 cell *f_cdr(cell *ast, environment *env);
+cell *f_char_to_integer(cell *ast, environment *env);
 cell *f_char_alphabetic(cell *ast, environment *env);
 cell *f_char_numeric(cell *ast, environment *env);
 cell *f_char_whitespace(cell *ast, environment *env);
