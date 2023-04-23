@@ -339,8 +339,10 @@ cell *f_char_to_integer(cell *ast, environment *env){
 
 cell *f_close_input_port(cell *ast, environment *env){
     if(ast->next){
-        if(ast->next->type==stream){
-            fclose(ast->next->stream);
+        ast->next->next=NULL;
+        cell *st=eval(ast->next, env);
+        if(st->type==stream){
+            fclose(st->stream);
         }
     }
     return NULL;
@@ -374,7 +376,20 @@ cell *f_cond(cell *ast, environment *env){
 
 cell *f_cons(cell *ast, environment *env){
     cell *cons=newcell(serialctr, NULL, 0, nil);
-    cons->contents=eval(ast->next, env);
+    cell *head=ast->next;
+    cell *tail=ast->next->next;
+    if(head){
+        head->next=NULL;
+        if(tail){
+            tail->next=NULL;
+            if(tail->contents){
+                head->next=tail->contents;
+            }else {
+                head->next=tail;
+            } 
+        }
+    }
+    cons->contents=eval(head, env);
     return cons;
 }
 
@@ -451,9 +466,14 @@ cell *f_define(cell *ast, environment *env){
             // define a variable
             if(ast->next->type==symbol || ast->next->type==string){
                 if(ast->next->next){
-                    cell *n=copyCellDeep(ast->next);
+                    cell *val=ast->next->next;
+                    cell *n=ast->next;
                     n->next=NULL;
-                    bindVar(eval(n, env)->symbol, eval(ast->next->next, env), env);
+                    primitive *p=getPrimitive(n->symbol);
+                    if(p){
+                        n=eval(n, env);
+                    }
+                    bindVar(n->symbol, eval(val, env), env);
                 }
             }
         }
@@ -655,10 +675,14 @@ cell *f_read_char(cell *ast, environment *env){
 cell *f_set(cell *ast, environment *env){
     if(ast->next){
         if(ast->next->next){
-            cell *val=copyCellDeep(eval(ast->next->next, env));
+            cell *val=eval(ast->next->next, env);
             ast->next->next=NULL;
-            cell *var=eval(ast->next, env);
+            cell *var=ast->next;
             if(var->contents) var=var->contents;
+            primitive *p=getPrimitive(var->symbol);
+            if(p){
+                var=eval(var, env);
+            }
             setVar(var->symbol, val, env);
         }
     }
@@ -705,8 +729,14 @@ cell *f_string_eq(cell *ast, environment *env){
     return newcell(serialctr++, "#f", 0, boolean);
 }
 
+cell *f_string_to_symbol(cell *ast, environment *env){
+    cell *cl=eval(ast->next, env);
+    cl->type=symbol;
+    return cl;    
+}
+
 cell *f_string(cell *ast, environment *env){
-    return f_string_append(ast, env);    
+    return f_string_append(ast->next, env);    
 }
 
 cell *f_string_length(cell *ast, environment *env){
@@ -751,13 +781,14 @@ cell *f_write(cell *ast, environment *env){
 }
 
 cell *f_write_char(cell *ast, environment *env){
+    int r;
     if(ast->next){
         if(!ast->next->next){
             printf("%c", eval(ast->next, env)->symbol[0]);
         } else {
-            if(ast->next->next->stream){
-                fputc(eval(ast->next, env)->symbol[0], ast->next->next->stream);
-            }
+            cell *st=eval(ast->next->next, env);
+            cell *cl=eval(ast->next, env);
+            r=fputc(cl->symbol[0], st->stream);
         }        
     }
     return NULL;
