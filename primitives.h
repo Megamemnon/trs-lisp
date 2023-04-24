@@ -5,6 +5,8 @@
 
 extern long serialctr;
 
+cell *p_ansi(cell *ast, environment *env);
+cell *p_print_int(cell *ast, environment *env);
 cell *p_ansi_reset(cell *ast, environment *env);
 cell *p_ansi_home(cell *ast, environment *env);
 cell *p_ansi_clear(cell *ast, environment *env);

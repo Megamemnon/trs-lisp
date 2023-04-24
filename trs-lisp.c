@@ -592,6 +592,8 @@ void initPrimitives(){
     addprim("write",f_write)
     addprim("write-char",f_write_char)
 
+    addprim("ansi", p_ansi)
+    addprim("pint", p_print_int)
     addprim("ansi-reset", p_ansi_reset)
     addprim("ansi-home", p_ansi_home)
     addprim("ansi-clear", p_ansi_clear)

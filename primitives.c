@@ -2,6 +2,18 @@
 #include "primitives.h"
 
 /* custom operators*/
+cell *p_ansi(cell *ast, environment *env){
+    printf("\x1b[");
+    return NULL;
+}
+
+cell *p_print_int(cell *ast, environment *env){
+    if(ast->next){
+        printf("%d", eval(ast->next, env));
+    }
+    return NULL;
+}
+
 cell *p_ansi_reset(cell *ast, environment *env){
     printf("\x1b[0m");
     return NULL;
