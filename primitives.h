@@ -6,7 +6,17 @@
 extern long serialctr;
 
 cell *p_ansi_reset(cell *ast, environment *env);
-cell *p_ansi(cell *ast, environment *env);
+cell *p_ansi_home(cell *ast, environment *env);
+cell *p_ansi_clear(cell *ast, environment *env);
+cell *p_ansi_fg(cell *ast, environment *env);
+cell *p_ansi_up(cell *ast, environment *env);
+cell *p_ansi_dn(cell *ast, environment *env);
+cell *p_ansi_rt(cell *ast, environment *env);
+cell *p_ansi_lt(cell *ast, environment *env);
+cell *p_ansi_col(cell *ast, environment *env);
+cell *p_ansi_next(cell *ast, environment *env);
+cell *p_ansi_prev(cell *ast, environment *env);
+cell *p_ansi_pos(cell *ast, environment *env);
 cell *p_exit(cell *ast, environment *env);
 cell *p_pass(cell *ast, environment *env);
 cell *p_strcmp(cell *ast, environment *env);

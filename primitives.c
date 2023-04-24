@@ -7,7 +7,17 @@ cell *p_ansi_reset(cell *ast, environment *env){
     return NULL;
 }
 
-cell *p_ansi(cell *ast, environment *env){
+cell *p_ansi_home(cell *ast, environment *env){
+    printf("\x1b[H");
+    return NULL;
+}
+
+cell *p_ansi_clear(cell *ast, environment *env){
+    printf("\x1b[2J");
+    return NULL;
+}
+
+cell *p_ansi_fg(cell *ast, environment *env){
     int a=0;
     if(ast->next){
         a=eval(ast->next, env)->number;
@@ -15,6 +25,85 @@ cell *p_ansi(cell *ast, environment *env){
     }
     return NULL;
 }
+
+cell *p_ansi_up(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dA", a);
+    }
+    return NULL;
+}
+
+cell *p_ansi_dn(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dB", a);
+    }
+    return NULL;
+}
+
+cell *p_ansi_rt(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dC", a);
+    }
+    return NULL;
+}
+
+cell *p_ansi_lt(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dD", a);
+    }
+    return NULL;
+}
+
+cell *p_ansi_col(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dG", a);
+    }
+    return NULL;
+}
+
+cell *p_ansi_next(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dE", a);
+    }
+    return NULL;
+}
+
+cell *p_ansi_prev(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dF", a);
+    }
+    return NULL;
+}
+
+cell *p_ansi_pos(cell *ast, environment *env){
+    int a=0;
+    int b=0;
+    if(ast->next){
+        if(ast->next->next){
+            b=eval(ast->next->next, env)->number;
+            ast->next->next=NULL;
+            a=eval(ast->next, env)->number;
+            printf("\x1b[%d;%dH", a);
+        }
+    }
+    return NULL;
+}
+
+
 
 cell *p_exit(cell *ast, environment *env){
     exit(0);

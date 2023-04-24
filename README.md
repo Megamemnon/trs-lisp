@@ -33,8 +33,18 @@ A second objective of this project is to implement a reliable system of self-mod
 
 ### Primitives
 The following procedures are provided in order to facilitate implentation of other procedures via macros:  
-- ansi - accepts one numeric argument X and prints ansi code for color X
 - ansi-reset - prints ansi reset code
+- ansi-home
+- ansi-clear
+- ansi-fg - accepts one numeric argument X and prints ansi code for color X
+- ansi-up
+- ansi-dn
+- ansi-rt
+- ansi-lt
+- ansi-col
+- ansi-pos
+- ansi-prev
+- ansi-next
 - exit - exits with no error
 - noop - do nothing
 - strcmp - returns the result of a C strcmp of two arguments
