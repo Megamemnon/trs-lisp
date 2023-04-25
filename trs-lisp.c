@@ -613,10 +613,17 @@ void initPrimitives(){
 primitive *getPrimitive(char *name){
     primitive *p=primitives;
     while(p){
-        if(!strcmp(p->name, name)){
-            return p;
-        }
+        if(!strcmp(p->name, name)) return p;
         p=p->next;
+    }
+    return NULL;
+}
+
+macro *getFunction(char *name){
+    macro *f=functions;
+    while(f){
+        if(!strcmp(f->name, name)) return f;
+        f=f->next;
     }
     return NULL;
 }
@@ -741,6 +748,25 @@ cell *eval(cell *ast, environment *env){
             if(p){
                 cell *opresult= p->f(ast, env);
                 return opresult;
+            } else {
+                macro *f=getFunction(ast->symbol);
+                if(f){
+                    environment *newenv=newenvironment(env);
+                    cell *var=f->expression->next;
+                    cell *val=ast->next;
+                    while(var){
+                        cell *valcopy=copyCellDeep(val);
+                        valcopy->next=NULL;
+                        bindVar(var->symbol, valcopy, newenv);
+                        var=var->next;
+                        val=val->next;
+                        if(!val){
+                            printf("Missing required parameters in call to '%s'.\n", f->name);
+                            exit(EXIT_FAILURE);
+                        }
+                    }
+                    return eval(f->expansion, newenv);
+                }
             }
         }
         break;
