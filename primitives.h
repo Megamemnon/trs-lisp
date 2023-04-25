@@ -5,6 +5,7 @@
 
 extern long serialctr;
 
+cell *p_ansi_code(cell *ast, environment *env);
 cell *p_ansi(cell *ast, environment *env);
 cell *p_print_int(cell *ast, environment *env);
 cell *p_ansi_reset(cell *ast, environment *env);
@@ -19,6 +20,7 @@ cell *p_ansi_col(cell *ast, environment *env);
 cell *p_ansi_next(cell *ast, environment *env);
 cell *p_ansi_prev(cell *ast, environment *env);
 cell *p_ansi_pos(cell *ast, environment *env);
+cell *p_define_function(cell *ast, environment *env);
 cell *p_exit(cell *ast, environment *env);
 cell *p_pass(cell *ast, environment *env);
 cell *p_strcmp(cell *ast, environment *env);
@@ -55,6 +57,7 @@ cell *f_eof_object(cell *ast, environment *env);
 cell *f_eqv(cell *ast, environment *env);
 cell *f_eq(cell *ast, environment *env);
 cell *f_integer_to_char(cell *ast, environment *env);
+cell *f_integer_to_string(cell *ast, environment *env);
 cell *f_let(cell *ast, environment *env);
 cell *f_list(cell *ast, environment *env);
 cell *f_load(cell *ast, environment *env);

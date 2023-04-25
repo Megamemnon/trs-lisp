@@ -1,17 +1,19 @@
 (display "trs-lisp Unit Tests")
 (newline)
-(define (pass X) 
-        (begin (display X) 
-               (ansi-fg 32) 
-               (display " PASS") 
-               (ansi-reset)
-               (newline)))
-(define (fail X) 
-        (begin (display X) 
-               (ansi-fg 31) 
-               (display " FAIL") 
-               (ansi-reset)
-               (newline)))
+(define-syntax pass
+               (pass X) 
+               (begin (display X) 
+                   (ansi-fg 32) 
+                   (display " PASS") 
+                   (ansi-reset)
+                   (newline)))
+(define-syntax fail
+               (fail X) 
+               (begin (display X) 
+                      (ansi-fg 31) 
+                      (display " FAIL") 
+                      (ansi-reset)
+                      (newline)))
 
 (newline)
 (display "R5RS Primitives...")
@@ -193,4 +195,4 @@
     (pass "zero?")
     (fail "zero?"))
 
-
+(exit)

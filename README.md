@@ -33,19 +33,8 @@ A second objective of this project is to implement a reliable system of self-mod
 
 ### Primitives
 The following procedures are provided in order to facilitate implentation of other procedures via macros:  
-- ansi - print ansi escape sequence
-- ansi - reset - prints ansi reset code
-- ansi - home
-- ansi - clear
-- ansi - fg - accepts one numeric argument X and prints ansi code for color X
-- ansi - up
-- ansi - dn
-- ansi - rt
-- ansi - lt
-- ansi - col
-- ansi - pos
-- ansi - prev
-- ansi - next
+- ansi-code - print ansi escape sequence followed by provided string argument
+- define-function - separated from R5RS's define can be used to define both Variables and Functions
 - exit - exits with no error
 - noop - do nothing
 - pint - print integer version of floating point argument
@@ -74,7 +63,8 @@ The following R5RS procedures are implemented as primitive operators:
 - close-input-port
 - close-output-port
 - cons
-- define
+- define (allocate and bind Variables only)
+- define-syntax
 - do
 - display
 - eof-object?

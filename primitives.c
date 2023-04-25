@@ -7,9 +7,18 @@ cell *p_ansi(cell *ast, environment *env){
     return NULL;
 }
 
+cell *p_ansi_code(cell *ast, environment *env){
+    if(ast->next){
+        printf("\x1b[%s", eval(ast->next, env)->symbol);
+
+    }
+    return NULL;
+}
+
 cell *p_print_int(cell *ast, environment *env){
     if(ast->next){
-        printf("%d", eval(ast->next, env));
+        cell *cl=eval(ast->next, env);
+        printf("%d", cl->number);
     }
     return NULL;
 }
@@ -115,7 +124,27 @@ cell *p_ansi_pos(cell *ast, environment *env){
     return NULL;
 }
 
-
+cell *p_define_function(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            if(ast->next->next->next) {
+                cell *expression=copyCellDeep(ast->next->next);
+                expression->next=NULL;
+                cell *expansion=copyCellDeep(ast->next->next->next);
+                if(expression->contents && !expression->next){
+                        expression=expression->contents;
+                    }
+                if(expansion->contents && !expansion->next){
+                        expansion=expansion->contents;
+                    }
+                macro *m=newMacro(ast->next->symbol, expression, expansion);
+                addFunction(m);
+                return NULL;
+            }
+        }
+    }
+    return NULL;
+}
 
 cell *p_exit(cell *ast, environment *env){
     exit(0);
@@ -548,34 +577,16 @@ cell *f_eq(cell *ast, environment *env){
 
 cell *f_define(cell *ast, environment *env){
     if(ast->next){
-        if(ast->next->contents){
-            // define a function macro
-            if(ast->next->next) {
-                cell *expression=copyCellDeep(ast->next);
-                expression->next=NULL;
-                cell *expansion=copyCellDeep(ast->next->next);
-                if(expression->contents && expansion->contents 
-                    && !expression->next && !expansion->next){
-                        expression=expression->contents;
-                        expansion=expansion->contents;
-                    }
-                macro *m=newMacro(ast->next->contents->symbol, expression, expansion);
-                addFunction(m);
-                return NULL;
-            }
-        } else {
-            // define a variable
-            if(ast->next->type==symbol || ast->next->type==string){
-                if(ast->next->next){
-                    cell *val=ast->next->next;
-                    cell *n=ast->next;
-                    n->next=NULL;
-                    primitive *p=getPrimitive(n->symbol);
-                    if(p){
-                        n=eval(n, env);
-                    }
-                    bindVar(n->symbol, eval(val, env), env);
+        if(ast->next->type==symbol || ast->next->type==string){
+            if(ast->next->next){
+                cell *val=ast->next->next;
+                cell *n=ast->next;
+                n->next=NULL;
+                primitive *p=getPrimitive(n->symbol);
+                if(p){
+                    n=eval(n, env);
                 }
+                bindVar(n->symbol, eval(val, env), env);
             }
         }
     }
@@ -583,6 +594,24 @@ cell *f_define(cell *ast, environment *env){
 }
 
 cell *f_define_syntax(cell *ast, environment *env){
+    if(ast->next){
+        if(ast->next->next){
+            if(ast->next->next->next) {
+                cell *expression=copyCellDeep(ast->next->next);
+                expression->next=NULL;
+                cell *expansion=copyCellDeep(ast->next->next->next);
+                if(expression->contents && !expression->next){
+                        expression=expression->contents;
+                    }
+                if(expansion->contents && !expansion->next){
+                        expansion=expansion->contents;
+                    }
+                macro *m=newMacro(ast->next->symbol, expression, expansion);
+                addMacro(m);
+                return NULL;
+            }
+        }
+    }
     return NULL;
 }
 
@@ -673,6 +702,19 @@ cell *f_integer_to_char(cell *ast, environment *env){
         buff[0]=(char )c;
         buff[1]=0;
         cell *cl=newcell(serialctr++, buff, c, string);
+        return cl;
+    }
+    return NULL;
+}
+
+cell *f_integer_to_string(cell *ast, environment *env){
+    if(ast->next){
+        cell *cl=eval(ast->next, env);
+        if(cl->type==number){
+            char buf[MAX_SYMBOL_LENGTH];
+            sprintf(buf, "%d", (int )cl->number);
+            return newcell(serialctr++, buf, cl->number, string);
+        }
         return cl;
     }
     return NULL;

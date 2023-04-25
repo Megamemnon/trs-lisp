@@ -212,8 +212,12 @@ bool equivalentCells(cell *a, cell *b){
 
 unifier *newunifier(char *variable, cell *bound){
     unifier *u=(unifier *)GC_malloc(sizeof(unifier));
-    u->variable=(char *)GC_malloc(strlen(variable)+1);
-    strcpy(u->variable, variable);
+    if(variable){
+        u->variable=(char *)GC_malloc(strlen(variable)+1);
+        strcpy(u->variable, variable);
+    } else {
+        u->variable=NULL;
+    }
     u->boundterm=copyCellDeep(bound);
     //Only match S-Expressions, not lists
     u->boundterm->next=NULL;
@@ -236,7 +240,7 @@ unifier *unify(cell *a, cell *b){
             if(!b->contents){
                 if(b->type!=a->type || strcmp(b->symbol,a->symbol)){
                     return NULL;
-                }
+                } 
             } else {
                 return NULL;
             }
@@ -498,7 +502,7 @@ macro *newMacro(char *name, cell *expression, cell *expansion){
 void addMacro(macro *m){
     if(macros){
         macro *x=macros;
-        while(!x->next){
+        while(x->next){
             x=x->next;
         }
         x->next=m;
@@ -572,6 +576,7 @@ void initPrimitives(){
     addprim("eqv?", f_eqv)
     addprim("eq?", f_eqv)
     addprim("integer->char",f_integer_to_char)
+    addprim("integer->string", f_integer_to_string)
     addprim("let",f_let)
     addprim("list", f_list)
     addprim("load",f_load)
@@ -592,20 +597,9 @@ void initPrimitives(){
     addprim("write",f_write)
     addprim("write-char",f_write_char)
 
-    addprim("ansi", p_ansi)
-    addprim("pint", p_print_int)
+    addprim("ansi-code", p_ansi_code)
     addprim("ansi-reset", p_ansi_reset)
-    addprim("ansi-home", p_ansi_home)
-    addprim("ansi-clear", p_ansi_clear)
-    addprim("ansi-fg", p_ansi_fg)
-    addprim("ansi-up", p_ansi_up)
-    addprim("ansi-dn", p_ansi_dn)
-    addprim("ansi-rt", p_ansi_rt)
-    addprim("ansi-lt", p_ansi_lt)
-    addprim("ansi-col", p_ansi_col)
-    addprim("ansi-pos", p_ansi_pos)
-    addprim("ansi-prev", p_ansi_prev)
-    addprim("ansi-next", p_ansi_next)
+    addprim("define-function", p_define_function)
     addprim("exit", p_exit)
     addprim("noop", p_pass)
     addprim("strcmp", p_strcmp)
@@ -627,145 +621,12 @@ primitive *getPrimitive(char *name){
     return NULL;
 }
 
-// void initPrimitiveOps(){
-//     primitive *p=NULL;
-//     primitive *pn=NULL;
-//     p=newPrimitive("+", f_add);
-//     primitiveops=p;
-//     pn=p;
-//     p=newPrimitive("-", f_sub);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("*", f_mul);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("/", f_div);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("=", f_equalsign);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("<", f_lessthan);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive(">", f_greaterthan);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("<=", f_lessthanequal);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive(">=", f_greaterthanequal);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("car", f_car);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("cdr", f_cdr);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("char-alphabetic?", f_char_alphabetic);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("char-numeric?", f_char_numeric);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("char-whitespace?", f_char_whitespace);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("char-upper-case?", f_char_upper_case);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("char-lower-case?", f_char_lower_case);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("char->integer", f_char_to_integer);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("cond", f_cond);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("cons", f_cons);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("display", f_display);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("integer->char", f_integer_to_char);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("newline", f_newline);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("readchar", f_readchar);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("string?", f_string);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("string-length", f_string_length);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("write", f_write);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("write-char", f_write_char);
-//     pn->next=p;
-// }
-
-// void initPrimitiveFuncs(){
-//     primitive *p=NULL;
-//     primitive *pn=NULL;
-//     p=newPrimitive("define", f_define);
-//     primitivefuncs=p;
-//     pn=p;
-//     p=newPrimitive("define-syntax", f_define_syntax);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("do", f_do);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("let", f_let);
-//     pn->next=p;
-//     pn=p;
-//     p=newPrimitive("load", f_load);
-//     pn->next=p;
-// }
-
-// primitive *getPrimitiveOp(char *name){
-//     primitive *p=primitiveops;
-//     while(p){
-//         if(!strcmp(p->name, name)){
-//             return p;
-//         }
-//         p=p->next;
-//     }
-//     return NULL;
-// }
-
-// primitive *getPrimitiveFunc(char *name){
-//     primitive *p=primitivefuncs;
-//     while(p){
-//         if(!strcmp(p->name, name)){
-//             return p;
-//         }
-//         p=p->next;
-//     }
-//     return NULL;
-// }
-
-// primitiveops prims[]={
-// {"cons", f_cons},
-// {"car", f_car},
-// {"cdr", f_cdr},
-// {"display", f_display},
-// {"function", f_defun},
-// {0}};
 
 #pragma endregion
 
 #pragma region Interpreter
 
-cell *applyFunctions(cell *ast, environment *env){
+cell *applyMacros(cell *ast, environment *env){
     cell *cl=ast;
     char *before=NULL;
     char *after=NULL;
@@ -774,18 +635,20 @@ cell *applyFunctions(cell *ast, environment *env){
         while(changed){
             changed=false;
             before=getStringfromAST(cl);
-            macro *m=functions;
+            macro *m=macros;
             while(m){
                 resolution *res=resolve(m->expression, cl);
                 resolution *r=res;
                 while (r){
                     cell *expansion=copyCellDeep(m->expansion);
                     unifier *u=r->unifier;
-                    while(u){
-                        unifier *u0=copyUnifierShallow(u);
-                        u0->next=NULL;
-                        applyUnifier(expansion, u0);
-                        u=u->next;
+                    if(u){
+                        while(u){
+                            unifier *u0=copyUnifierShallow(u);
+                            u0->next=NULL;
+                            applyUnifier(expansion, u0);
+                            u=u->next;
+                        }
                     }
                     changed=true;
                     if(r->matchedcell->serial==cl->serial){
@@ -807,6 +670,53 @@ cell *applyFunctions(cell *ast, environment *env){
     }
     return cl;
 }
+
+
+cell *applyFunctions(cell *ast, environment *env){
+    cell *cl=ast;
+    char *before=NULL;
+    char *after=NULL;
+    if(cl){
+        bool changed=true;
+        while(changed){
+            changed=false;
+            before=getStringfromAST(cl);
+            macro *m=functions;
+            while(m){
+                resolution *res=resolve(m->expression, cl);
+                resolution *r=res;
+                while (r){
+                    cell *expansion=copyCellDeep(m->expansion);
+                    unifier *u=r->unifier;
+                    if(u){
+                        while(u){
+                            unifier *u0=copyUnifierShallow(u);
+                            u0->next=NULL;
+                            applyUnifier(expansion, u0);
+                            u=u->next;
+                        }
+                    }
+                    changed=true;
+                    if(r->matchedcell->serial==cl->serial){
+                        cl=expansion;
+                    } else {
+                        replaceNode(r->matchedcell, expansion, cl);
+                    }
+                    r=r->next;
+                }
+                m=m->next;
+            }
+            if(changed){
+                after=getStringfromAST(cl);
+                if(!strcmp(before, after)){
+                    changed=false;
+                }
+            }
+        }
+    }
+    return cl;
+}
+
 
 cell *eval(cell *ast, environment *env){
     cell *x=NULL;
@@ -875,7 +785,7 @@ void interpret(environment *env){
     formula=getStringfromAST(cl);
     printf("Parsing yields:\n  %s\n",formula);
 #endif
-    cell *ast=applyFunctions(cl, env);
+    cell *ast=applyMacros(cl, env);
 #ifdef DEBUG_VERBOSE
     formula=getStringfromAST(ast);
     printf("Applying Macros yields:\n  %s\n",formula);
