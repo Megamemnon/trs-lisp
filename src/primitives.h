@@ -1,7 +1,7 @@
 #ifndef TRS_LISP_PRIMITIVES
 #define TRS_LISP_PRIMITIVES
 
-#include "trs_lisp.h"
+#include "trs-lisp.h"
 
 extern long serialctr;
 
