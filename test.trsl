@@ -1,5 +1,1 @@
-(ansi-code "0;31m")
-(display "test")
-(ansi-reset)
-(newline)
-(exit)
+(p "Hello World")

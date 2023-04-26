@@ -1,61 +1,61 @@
-(define-syntax ansi-fg
-               (ansi-fg X)
-               (ansi-code (string-append "0;" (integer->string X) "m")))
-(define-syntax boolean?
-               (boolean? X) 
-               (string=? (type X) "boolean"))
-(define-syntax cadr 
-               (cadr X) 
-               (car (cdr X)))
-(define-syntax caddr
-               (caddr X) 
-               (car (cdr (cdr X))))
-(define-syntax equal?
-               (equal? A B) 
-               (eqv? A B))
-(define-syntax if   
-               (if Test True False) 
-               (cond (Test True) 
-               (else False)))
-(define-syntax negative?
-               (negative? X) 
-               (< X 0))
-(define-syntax number?
-               (number? X) 
-               (string=? (type X) "number"))
-(define-syntax positive?
-               (positive? X) 
-               (> X 0))
-(define-syntax stream?
-               (stream? X) 
-               (string=? (type X) "stream"))
-(define-syntax string?
-               (string? X) 
-               (string=? (type X) "string"))
-(define-syntax string<?
-               (string<? X Y) 
-               (if (< (strcmp X Y) 0)
-                   #t
-                   #f))
-(define-syntax string>?
-               (string>? X Y) 
-               (if (> (strcmp X Y) 0)
-                   #t
-                   #f))
-(define-syntax string<=?
-               (string<=? X Y) 
-               (if (<= (strcmp X Y) 0)
-                   #t
-                   #f))
-(define-syntax string>=?
-               (string>=? X Y) 
-               (if (>= (strcmp X Y) 0)
-                   #t
-                   #f))
-(define-syntax symbol?
-               (symbol? X) 
-               (string=? (type X) "symbol"))
-(define-syntax zero?
-               (zero? X) 
-               (= X 0))
+(define-function ansi-fg
+                 (ansi-fg X)
+                 (ansi-code (string-append "0;" (integer->string X) "m")))
+(define-function boolean?
+                 (boolean? X) 
+                 (string=? (type X) "boolean"))
+(define-function cadr 
+                 (cadr X) 
+                 (car (cdr X)))
+(define-function caddr
+                 (caddr X) 
+                 (car (cdr (cdr X))))
+(define-function equal?
+                 (equal? A B) 
+                 (eqv? A B))
+(define-function if   
+                 (if Test True False) 
+                 (cond (Test True) 
+                 (else False)))
+(define-function negative?
+                 (negative? X) 
+                 (< X 0))
+(define-function number?
+                 (number? X) 
+                 (string=? (type X) "number"))
+(define-function positive?
+                 (positive? X) 
+                 (> X 0))
+(define-function stream?
+                 (stream? X) 
+                 (string=? (type X) "stream"))
+(define-function string?
+                 (string? X) 
+                 (string=? (type X) "string"))
+(define-function string<?
+                 (string<? X Y) 
+                 (if (< (strcmp X Y) 0)
+                     #t
+                     #f))
+(define-function string>?
+                 (string>? X Y) 
+                 (if (> (strcmp X Y) 0)
+                     #t
+                     #f))
+(define-function string<=?
+                 (string<=? X Y) 
+                 (if (<= (strcmp X Y) 0)
+                     #t
+                     #f))
+(define-function string>=?
+                 (string>=? X Y) 
+                 (if (>= (strcmp X Y) 0)
+                     #t
+                     #f))
+(define-function symbol?
+                 (symbol? X) 
+                 (string=? (type X) "symbol"))
+(define-function zero?
+                 (zero? X) 
+                 (= X 0))
 

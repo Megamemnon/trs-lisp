@@ -1,2 +1,2 @@
-(define (ansi-reset)
-        (ansi-code "0m"))
+(define-function p (p X)
+                 (display X))

@@ -132,10 +132,10 @@ cell *copyCellDeep(cell *cl){
 
 char *getStringfromAST(cell *ast){
     if(!ast) return NULL;
-    char *temp;
-    char *contained;
+    char *temp=NULL;
+    char *contained = NULL;
     long contlen;
-    char *next;
+    char *next=NULL;
     long nexlen;
     if(ast->contents){
         temp=getStringfromAST(ast->contents);
@@ -158,7 +158,9 @@ char *getStringfromAST(cell *ast){
             contained=ast->symbol;
         }
     }
-    next=getStringfromAST(ast->next);
+    if(ast->next){
+        next=getStringfromAST(ast->next);
+    }
     if(next){
         if(contained){
             contlen=strlen(contained);
@@ -344,7 +346,8 @@ void replaceNode(cell *expr, cell *rplc, cell *ast){
 }
 
 void replaceVariable(char *var, cell *rplc, cell *ast){
-    if(!ast->contents){
+    if(!ast) return;
+    if(!ast->contents && ast->symbol){
         if(!strcmp(ast->symbol, var)){
             if(!rplc->contents){
                 ast->symbol=(char *) GC_malloc(strlen(rplc->symbol)+1);
@@ -749,23 +752,27 @@ cell *eval(cell *ast, environment *env){
                 cell *opresult= p->f(ast, env);
                 return opresult;
             } else {
-                macro *f=getFunction(ast->symbol);
-                if(f){
-                    environment *newenv=newenvironment(env);
-                    cell *var=f->expression->next;
-                    cell *val=ast->next;
-                    while(var){
-                        cell *valcopy=copyCellDeep(val);
-                        valcopy->next=NULL;
-                        bindVar(var->symbol, valcopy, newenv);
-                        var=var->next;
-                        val=val->next;
-                        if(!val){
-                            printf("Missing required parameters in call to '%s'.\n", f->name);
-                            exit(EXIT_FAILURE);
+                if(ast->next){
+                    macro *f=getFunction(ast->symbol);
+                    if(f){
+                        // cell *cl=applyFunctions(ast, env);
+                        // return eval(cl, env);
+                        cell *var=f->expression->next;
+                        cell *val=ast->next;
+                        cell *exp=copyCellDeep(f->expansion);
+                        while(var){
+                            if(!val){
+                                printf("Missing required parameters in call to '%s'.\n", f->name);
+                                exit(EXIT_FAILURE);
+                            }
+                            cell *valcopy=copyCellDeep(val);
+                            valcopy->next=NULL;
+                            replaceVariable(var->symbol, valcopy, exp);
+                            var=var->next;
+                            val=val->next;
                         }
+                        return eval(exp, env);
                     }
-                    return eval(f->expansion, newenv);
                 }
             }
         }
