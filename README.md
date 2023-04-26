@@ -48,7 +48,7 @@ The following procedures are implemented as primitives in order to facilitate im
 
 (Upper Case letters represent parameters.)  
 
-| Proc | Type | Desc |
+| Procedure | Return Type | Description |
 | --- | --- | --- | 
 | ansi-code | nil | print ansi escape sequence "\033[" and A |
 | ansi-reset | nil | prints ansi escape sequence for reset |
@@ -56,11 +56,11 @@ The following procedures are implemented as primitives in order to facilitate im
 | exit | nil | exits with no error |
 | noop | nil | do nothing |
 | strcmp | number | returns the result of a C strcmp of A and B |
-| type | string | returns the type of its first argument as a string |
+| Return Type |string | returns the type of its first argument as a string |
 
 The following R5RS procedures are implemented as primitive operators:  
 
-| Proc | Type | Desc |
+| Procedure | Return Type | Description |
 | --- | --- | --- | 
 | \+ | number | A + B |
 | \- | number | A \- B |
@@ -112,13 +112,13 @@ The following R5RS procedures are implemented as primitive operators:
 ### Functions
 The following procedures are implemented in stdlib.trsl:
 
-| Proc | Type | Desc |
+| Procedure | Return Type | Description |
 | --- | --- | --- | 
 | stream? | boolean | #t if A is a stream |
 
 The following R5RS procedures are implemented as functions in stdlib.trsl:
 
-| Proc | Type | Desc |
+| Procedure | Return Type | Description |
 | --- | --- | --- |
 | boolean? | boolean | #t if A is boolean |
 | cadr | ast | car(cdr (A B C ...)) | 
