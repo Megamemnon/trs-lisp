@@ -42,55 +42,55 @@ The following procedures are provided in order to facilitate implentation of oth
 - type - returns the type of its first argument as a string
 
 The following R5RS procedures are implemented as primitive operators:
-- \+ (add)
-- \- (subtract)
-- \* (multiply)
-- / (divide)
-- =
-- <
-- \>
-- <=
-- \>=
-- begin
-- car
-- cdr
-- char-alphabetic?
-- char-numeric?
-- char-whitespace?
-- char-upper-case?
-- char-lower-case?
-- char->integer
-- close-input-port
-- close-output-port
-- cons
-- define (allocate and bind Variables only)
-- define-syntax
-- do
-- display
-- eof-object?
-- eqv?
-- eq?
-- integer->char
-- let
-- list 
-- load
-- newline
-- number->string
-- open-input-file
-- open-output-file
-- quote (or just ' )
-- readchar
-- set!
-- string
-- string-append
-- string-length
-- string=?
-- substring
-- write  
+
+(Upper Case letters represent parameters.)
+
+| Proc | Type | Desc | Proc | Type | Desc |
+| --- | --- | --- | --- | --- | --- | 
+| \+ | number | A + B |  \- | number | A \- B |
+| \* | number | A * B |  / | number | A / B| 
+| = | boolean | A = B |  < | boolean | A < B |
+| \> | boolean | A \> B | <= | boolean | A <= B |
+| \>= | boolean | A \>= B | begin | ast | eval args |
+| car | ast | 
+| cdr | 
+| char-alphabetic? | 
+| char-numeric? | 
+| char-whitespace? | 
+| char-upper-case? | 
+| char-lower-case? | 
+| char->integer | 
+| close-input-port | 
+| close-output-port | 
+| cons | 
+| define (allocate and bind Variables only) | 
+| define-syntax | 
+| do | 
+| display | 
+| eof-object? | 
+| eqv? | 
+| eq? | 
+| integer->char | 
+| let | 
+| list  | 
+| load | 
+| newline | 
+| number->string | 
+| open-input-file | 
+| open-output-file | 
+| quote (or just ' ) | 
+| readchar | 
+| set! | 
+| string | 
+| string-append | 
+| string-length | 
+| string=? | 
+| substring | 
+| write  
 
 ### Macros
 The following procedures are implemented in stdlib.trsl:  
-- stream?
+|stream?
 
 The following R5RS procedures are implemented as macros in stdlib.trsl:  
 - boolean?
