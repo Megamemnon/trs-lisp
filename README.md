@@ -6,8 +6,6 @@ A dynamically typed lisp-like language based primarily on term rewriting and sel
 ## Term Rewriting
 This project was primarily intended to implement a usable programming language with Term Rewriting. The S-Expression was chosen for the language's syntax because it's easily parsed into an AST. Macros, defined in the source language, identify an Expression and an Expansion. When a Macro Expression matches an S-Expression in the source code, Meta Variables (identifed by uppercase first letters) within the Macro Expression are Unified with elements of the matched S-Expression. Those same Variables in The Macro Expansion are then replaced with the Unified values and the result completely replaces the matched S-Expression in the source code.  
 
-In addition, a perhaps more traditional approach of storing a user defined function, binding it's Meta Variables to parameters provided by the invoking code, and then evaluating the modified function is also provided by the define-function procedure. It seems the more time I spend with this toy language the further it has deviated from my original intent, but this is certainly more efficient than repeatedly applying macros until no further transformations occur.  
-
 ### Macros
 User Functions are implemented as Macros. These macros modify the AST from the original source code, essentially (perhaps recursively) replacing 'function calls' with primitive operators.
 
@@ -25,7 +23,8 @@ Our **define-syntax** has the signature <code>(define {functionname} ({functionn
 ### Self Modifying Code 
 Instead of allocating memory on the heap or using the stack, this system always works with the AST originally created by parsing the provided source code (and applying macros). Primitive Operations that may be expected to allocate memory dynamically in other languages will modify the AST in trs-lisp, essentially allocating all necessary memory within the existing AST, releasing nodes that are no longer needed, etc.  
 
-The two exceptions to this are Variables and User Defined Functions. Variables and the value to which they are bound are added to the current Environment. Functions, like Macros, are stored in memory outside the AST. 
+User defined functions work the same way, binding the function's Meta Variables to parameters provided by the invoking code, and then evaluating the modified function. User defined functions are ASTs disconnected from the original source code's AST.  
+
 
 ## Evaluation Strategy
 
