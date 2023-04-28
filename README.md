@@ -135,6 +135,15 @@ The following R5RS procedures are implemented as functions in stdlib.trsl:
 | **symbol?** |  boolean | #t if A is symbol |
 | **zero?** | boolean | #t if A is 0 |
 
+### Macros
+
+The following procedures are implemented in stdlib.trsl:
+
+| Procedure | Return Type | Description |
+| --- | --- | --- | 
+| **comment** | nil | always returns nil, ignoring all parameters, which should be entered as nested lists |
+
+
 ## References
 
 Descriptions of R5RS functions can be found at [Scheme Revised(5) Report on the Algorithmic Language Scheme's Variables and Procedures page](https://www-sop.inria.fr/indes/fp/Bigloo/doc/r5rs-12.html)
