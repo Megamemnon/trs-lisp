@@ -1,17 +1,23 @@
 # trs-lisp
 Term Rewriting System Lisp  
 
-A dynamically typed lisp-like language based primarily on term rewriting and self-modifying code. Functions modify the Abstract Syntax Tree (AST) instead of allocating memory from the heap. A multi-level Environment is provided to enable global and lexically scoped variables.  
+A dynamically typed lisp-like language based primarily on term rewriting and self-modifying code. Functions modify the Abstract Syntax Tree (AST) instead of allocating memory from the heap. A multi-level Environment is provided to enable globally and lexically scoped variables.  
 
 ## Term Rewriting
 This project was primarily intended to implement a usable programming language with Term Rewriting. The S-Expression was chosen for the language's syntax because it's easily parsed into an AST. Macros, defined in the source language, identify an Expression and an Expansion. When a Macro Expression matches an S-Expression in the source code, Meta Variables (identifed by uppercase first letters) within the Macro Expression are Unified with elements of the matched S-Expression. Those same Variables in The Macro Expansion are then replaced with the Unified values and the result completely replaces the matched S-Expression's AST structure.  
 
+### Self Modifying Code 
+Instead of allocating memory on the heap or using the stack, this system always works with the AST originally created by parsing the provided source code (and applying macros). Primitive Operations that may be expected to allocate memory dynamically in other languages will modify the AST in trs-lisp, essentially allocating all necessary memory within the existing AST, releasing nodes that are no longer needed, etc.  
+
+### Functions  
+User defined functions (**define-function**) modify the AST of the original source code with values bound to the function's Meta Variables. 
+
+R5RS, this project's source of function and operation names and behaviors (though we will take many liberties), describes one way to use **define** as <code>(define ({variable} {formals}) {body})</code>. Our **define-function** has the signature <code>(define-function {functionname} ({functionname} {meta-variables}) ({body}))</code> where body contains the Meta Variables which must begin with an Uppercase Letter. At run time, these Meta Variables are bound with parameters provided in the function call based on the order in which they occur and replaced within the AST of the function with their bound values.
+
 ### Macros
-User Functions can be implemented as Macros. These macros modify the AST from the original source code, essentially (perhaps recursively) replacing 'function calls' with primitive operators.
+User Functions can also be implemented as Macros. These macros modify the AST from the original source code, essentially (perhaps recursively) replacing 'macro calls' with the macro expansions.  
 
-R5RS, this project's source of function and operation names and behaviors (though we will take many liberties), describes one use of **define-syntax** as <code>(define {keyword} {transformer})</code>.  
-
-Our **define-syntax** has the signature <code>(define {functionname} ({functionname} {arglist}) {expansion})</code> where expression may contain Variables - included in arglist - to be unified during the resolution process. Variables - for Term Rewritingn Macros only - are identifiers beginning with an Uppercase Letter.
+R5RS describes **define-syntax** as <code>(define-syntax {keyword} {transformer})</code>. Our **define-syntax** has the signature <code>(define {macroname} ({macroname} {meta-variables}) {expansion})</code> where expression contains the Meta Variables to be unified during the resolution process. As with functions, Meta Variables in macros are identifiers beginning with an Uppercase Letter.
 
 >For example, the follow Macro...  
 ><code>(define-syntax ++ (++ A B C) (+ A (+ B C)) )</code>  
@@ -20,12 +26,6 @@ Our **define-syntax** has the signature <code>(define {functionname} ({functionn
 >into...  
 ><code>(+ 1 (+ 2 3))</code>
 
-### Self Modifying Code 
-Instead of allocating memory on the heap or using the stack, this system always works with the AST originally created by parsing the provided source code (and applying macros). Primitive Operations that may be expected to allocate memory dynamically in other languages will modify the AST in trs-lisp, essentially allocating all necessary memory within the existing AST, releasing nodes that are no longer needed, etc.  
-
-A second type of user defined function (**define-function**) works the same way, binding the function's Meta Variables to parameters provided by the invoking code, and then evaluating the modified function.  
-
-
 ## Evaluation Strategy
 
 -  Source code is tokenized
@@ -33,7 +33,7 @@ A second type of user defined function (**define-function**) works the same way,
 -  Macros (defined by define-syntax) are applied to the AST
 -  AST is Evaluated  
 - - Strings, Numbers, and Booleans evaluate to themselves 
-- - Symbols are looked up in the environment (variables)  
+- - Symbols are looked up in the environment (where variables are stored)  
 - - - Bound symbols are replaced with the AST to which they were bound  
 - - Symbols are looked up in primitive procedures  
 - - - primitive is invoked and will evaluate AST elements as needed  
@@ -43,7 +43,7 @@ A second type of user defined function (**define-function**) works the same way,
 - - Unmatched Symbols evaluate to themselves  
 
 ### Primitives
-The following procedures are implemented as primitives in order to facilitate implentation of user functions and macros:  
+The following procedures - unique to trs-lisp - are implemented as primitives in order to facilitate implentation of user functions and macros:  
 
 (Upper Case letters represent parameters.)  
 
@@ -109,7 +109,7 @@ The following R5RS procedures are implemented as primitive operators:
 | **write-char** | nil | prints first char in A to screen or stream if B is provided |
 
 ### Functions
-The following procedures are implemented in stdlib.trsl:
+The following trs-lisp procedures are implemented as functions in stdlib.trsl:
 
 | Procedure | Return Type | Description |
 | --- | --- | --- | 
@@ -137,7 +137,7 @@ The following R5RS procedures are implemented as functions in stdlib.trsl:
 
 ### Macros
 
-The following procedures are implemented in stdlib.trsl:
+The following trs-lisp macros are implemented in stdlib.trsl:
 
 | Procedure | Return Type | Description |
 | --- | --- | --- | 
