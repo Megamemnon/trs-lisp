@@ -1,6 +1,9 @@
 (define-syntax comment
                (comment X)
                (noop X))
+(comment (stdlib.trsl Coypright (c) Brian ODell))
+(comment (Mozilla Public License Version 2.0))
+(comment (Incompatible With Secondary Licenses))
 
 (define-function ansi-fg
                  (ansi-fg X)

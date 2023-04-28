@@ -1,3 +1,16 @@
+/*************************************************************************
+  trs-lisp
+  Copyright (c) 2023 Brian O'Dell
+  
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+  This Source Code Form is "Incompatible With Secondary Licenses", as
+  defined by the Mozilla Public License, v. 2.0.
+
+*************************************************************************/
+
 #ifndef TRS_LISP
 #define TRS_LISP
 
@@ -15,9 +28,9 @@
 
 #define DEBUG
 #define DEBUG_FILE_1 "/home/brian/git/trs-lisp/lib/stdlib.trsl"
-// #define DEBUG_FILE_2 "/home/brian/git/trs-lisp/test/unittests.trsl"
+#define DEBUG_FILE_2 "/home/brian/git/trs-lisp/test/unittests.trsl"
 // #define DEBUG_FILE_1 "/home/brian/git/trs-lisp/test/stdlib0.trsl"
-#define DEBUG_FILE_2 "/home/brian/git/trs-lisp/edit.trsl"
+// #define DEBUG_FILE_2 "/home/brian/git/trs-lisp/edit.trsl"
 // #define DEBUG_VERBOSE
 
 
