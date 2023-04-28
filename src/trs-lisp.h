@@ -7,15 +7,17 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <termios.h>
+#include <unistd.h>
 #include <gc.h>
 
 #define R5RS_PRIMITIVES
 
 #define DEBUG
 #define DEBUG_FILE_1 "/home/brian/git/trs-lisp/lib/stdlib.trsl"
-#define DEBUG_FILE_2 "/home/brian/git/trs-lisp/test/unittests.trsl"
+// #define DEBUG_FILE_2 "/home/brian/git/trs-lisp/test/unittests.trsl"
 // #define DEBUG_FILE_1 "/home/brian/git/trs-lisp/test/stdlib0.trsl"
-// #define DEBUG_FILE_2 "/home/brian/git/trs-lisp/test/test.trsl"
+#define DEBUG_FILE_2 "/home/brian/git/trs-lisp/edit.trsl"
 // #define DEBUG_VERBOSE
 
 

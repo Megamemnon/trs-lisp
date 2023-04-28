@@ -2,10 +2,6 @@
 #include "primitives.h"
 
 /* custom operators*/
-cell *p_ansi(cell *ast, environment *env){
-    printf("\x1b[");
-    return NULL;
-}
 
 cell *p_ansi_code(cell *ast, environment *env){
     if(ast->next){
@@ -15,114 +11,120 @@ cell *p_ansi_code(cell *ast, environment *env){
     return NULL;
 }
 
-cell *p_print_int(cell *ast, environment *env){
-    if(ast->next){
-        cell *cl=eval(ast->next, env);
-        printf("%d", cl->number);
-    }
-    return NULL;
-}
-
 cell *p_ansi_reset(cell *ast, environment *env){
     printf("\x1b[0m");
     return NULL;
 }
 
-cell *p_ansi_home(cell *ast, environment *env){
-    printf("\x1b[H");
-    return NULL;
-}
+// cell *p_ansi(cell *ast, environment *env){
+//     printf("\x1b[");
+//     return NULL;
+// }
 
-cell *p_ansi_clear(cell *ast, environment *env){
-    printf("\x1b[2J");
-    return NULL;
-}
+// cell *p_ansi_home(cell *ast, environment *env){
+//     printf("\x1b[H");
+//     return NULL;
+// }
 
-cell *p_ansi_fg(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[0;%dm", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_clear(cell *ast, environment *env){
+//     printf("\x1b[2J");
+//     return NULL;
+// }
 
-cell *p_ansi_up(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[%dA", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_fg(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[0;%dm", a);
+//     }
+//     return NULL;
+// }
 
-cell *p_ansi_dn(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[%dB", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_up(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[%dA", a);
+//     }
+//     return NULL;
+// }
 
-cell *p_ansi_rt(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[%dC", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_dn(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[%dB", a);
+//     }
+//     return NULL;
+// }
 
-cell *p_ansi_lt(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[%dD", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_rt(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[%dC", a);
+//     }
+//     return NULL;
+// }
 
-cell *p_ansi_col(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[%dG", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_lt(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[%dD", a);
+//     }
+//     return NULL;
+// }
 
-cell *p_ansi_next(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[%dE", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_col(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[%dG", a);
+//     }
+//     return NULL;
+// }
 
-cell *p_ansi_prev(cell *ast, environment *env){
-    int a=0;
-    if(ast->next){
-        a=eval(ast->next, env)->number;
-        printf("\x1b[%dF", a);
-    }
-    return NULL;
-}
+// cell *p_ansi_next(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[%dE", a);
+//     }
+//     return NULL;
+// }
 
-cell *p_ansi_pos(cell *ast, environment *env){
-    int a=0;
-    int b=0;
-    if(ast->next){
-        if(ast->next->next){
-            b=eval(ast->next->next, env)->number;
-            ast->next->next=NULL;
-            a=eval(ast->next, env)->number;
-            printf("\x1b[%d;%dH", a);
-        }
-    }
-    return NULL;
-}
+// cell *p_ansi_prev(cell *ast, environment *env){
+//     int a=0;
+//     if(ast->next){
+//         a=eval(ast->next, env)->number;
+//         printf("\x1b[%dF", a);
+//     }
+//     return NULL;
+// }
+
+// cell *p_ansi_pos(cell *ast, environment *env){
+//     int a=0;
+//     int b=0;
+//     if(ast->next){
+//         if(ast->next->next){
+//             b=eval(ast->next->next, env)->number;
+//             ast->next->next=NULL;
+//             a=eval(ast->next, env)->number;
+//             printf("\x1b[%d;%dH", a);
+//         }
+//     }
+//     return NULL;
+// }
+
+// cell *p_print_int(cell *ast, environment *env){
+//     if(ast->next){
+//         cell *cl=eval(ast->next, env);
+//         printf("%d", cl->number);
+//     }
+//     return NULL;
+// }
+
 
 cell *p_define_function(cell *ast, environment *env){
     if(ast->next){
@@ -660,7 +662,7 @@ cell *f_do(cell *ast, environment *env){
         // loop
         while(1){
             // test
-            testresult=eval(test, env);
+            testresult=eval(copyCellDeep(test), env);
             if(testresult->contents && !testresult->next) testresult=testresult->contents;
             if(!strcmp(testresult->symbol, "#t")){
                 return eval(iftrue, env);
@@ -801,7 +803,14 @@ cell *f_read_char(cell *ast, environment *env){
     char *c=(char *)GC_malloc(2);
     c[1]=0;
     if(!ast->next){
+        static struct termios oldt, newt;
+        tcgetattr( STDIN_FILENO, &oldt);
+        newt = oldt;
+        newt.c_lflag &= ~(ICANON | ECHO);          
+        tcsetattr( STDIN_FILENO, TCSANOW, &newt);
         c[0]=getchar();
+        printf("%i",c[0]);
+        tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
         cell *cl=newcell(serialctr++, c, c[0], string);
         return cl;
     } else {

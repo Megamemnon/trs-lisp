@@ -1,3 +1,7 @@
+(define-syntax comment
+               (comment X)
+               (noop X))
+
 (define-function ansi-fg
                  (ansi-fg X)
                  (ansi-code (string-append "0;" (integer->string X) "m")))

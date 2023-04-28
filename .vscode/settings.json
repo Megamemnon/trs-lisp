@@ -1,3 +1,11 @@
 {
-    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+    "makefile.makefilePath": "/home/brian/git/trs-lisp/src/Makefile",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/brian/git/trs-lisp",
+            "binaryPath": "/home/brian/git/trs-lisp/trs-lisp",
+            "binaryArgs": []
+        }
+    ]
 }

@@ -1,7 +1,7 @@
 CC=gcc
-CFLAGS=-I.
-DEPS=trs-lisp.h primitives.h
-OBJ=trs-lisp.c primitives.c
+CFLAGS=-g -I.
+DEPS=src/trs-lisp.h src/primitives.h
+OBJ=src/trs-lisp.c src/primitives.c
 LIBS=-lgc
 
 %.o: %.c $(DEPS)

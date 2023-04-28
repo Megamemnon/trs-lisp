@@ -1,0 +1,5 @@
+(comment (editor ))
+(define c "X")
+(do ((x 1 (+ x 1))) 
+    ((> x 12) (display "done")) 
+    (set! c (read-char)) (display c))

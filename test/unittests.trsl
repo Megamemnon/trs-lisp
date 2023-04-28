@@ -1,3 +1,5 @@
+(comment (unit tests for each procedure, macro and function provided in trs-lisp and standard library))
+
 (display "trs-lisp Unit Tests")
 (newline)
 (define-function pass
@@ -145,7 +147,13 @@
 
 
 (newline)
-(display "Macros...")
+(display "STDLIB Macros...")
+(newline)
+
+(pass "comment")
+
+(newline)
+(display "STDLIB Functions...")
 (newline)
 
 (if (boolean? (= 1 1))
@@ -195,4 +203,4 @@
     (pass "zero?")
     (fail "zero?"))
 
-(exit)
+
