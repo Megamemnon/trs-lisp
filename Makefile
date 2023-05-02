@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-g -I.
-DEPS=src/trs-lisp.h src/primitives.h
+DEPS=src/termbox2.h src/trs-lisp.h src/primitives.h
 OBJ=src/trs-lisp.c src/primitives.c
 LIBS=-lgc
 

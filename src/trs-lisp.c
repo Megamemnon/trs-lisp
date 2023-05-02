@@ -621,7 +621,7 @@ void initPrimitives(){
     addprim("strcmp", p_strcmp)
     addprim("type", p_type)
 
-#ifdef TEXTBOX2
+#ifdef TERMBOX2
     addprim("tb_init", p_tb_init)
     addprim("tb_shutdown", p_tb_shutdown)
     addprim("tb_height", p_tb_height)
@@ -632,6 +632,7 @@ void initPrimitives(){
     addprim("tb_set_cursor", p_tb_set_cursor)
     addprim("tb_hide_cursor", p_tb_hide_cursor)
     addprim("tb_print", p_tb_print)
+    addprim("tb_getkey", p_tb_getkey)
 #endif
 
 #else

@@ -213,99 +213,128 @@ cell *p_type(cell *ast, environment *env){
     return NULL;
 }
 
-/* TEXTBOX 2 procedures */
-#ifdef TEXTBOX2
+/* TERMBOX 2 procedures */
+// #ifdef TERMBOX2
+// #define TB_IMPL
 
-cell *p_tb_init(cell *ast, environment *env){
-    tb_init();
-    return NULL;
-}
-cell *p_tb_shutdown(cell *ast, environment *env){
-    tb_shutdown();
-    return NULL;
-}
+// #include "termbox2.h"
 
-cell *p_tb_width(cell *ast, environment *env){
-    return newcell(serialctr++, NULL, tb_width(), number);
-}
+// struct tb_event tb_ev;
 
-cell *p_tb_height(cell *ast, environment *env){
-    return newcell(serialctr++, NULL, tb_height(), number);
-}
+// cell *p_tb_init(cell *ast, environment *env){
+//     tb_init();
+//     return NULL;
+// }
+// cell *p_tb_shutdown(cell *ast, environment *env){
+//     tb_shutdown();
+//     return NULL;
+// }
 
-cell *p_tb_clear(cell *ast, environment *env){
-    tb_clear();
-    return NULL;
-}
+// cell *p_tb_width(cell *ast, environment *env){
+//     return newcell(serialctr++, NULL, tb_width(), number);
+// }
 
-cell *p_tb_set_clear_attrs(cell *ast, environment *env){
-    int fg,bg;
-    if(ast->next){
-        if(ast->next->next){
-            bg=eval(ast->next->next, env)->number;
-            ast->next->next=NULL;
-            fg=eval(ast->next, env)->number;
-            tb_set_cursor(fg, bg);
-        }
-    }
-    return NULL;
-}
+// cell *p_tb_height(cell *ast, environment *env){
+//     return newcell(serialctr++, NULL, tb_height(), number);
+// }
 
-cell *p_tb_present(cell *ast, environment *env){
-    tb_present();
-    return NULL;
-}
+// cell *p_tb_clear(cell *ast, environment *env){
+//     tb_clear();
+//     return NULL;
+// }
 
-cell *p_tb_set_cursor(cell *ast, environment *env){
-    int x,y;
-    if(ast->next){
-        if(ast->next->next){
-            y=eval(ast->next->next, env)->number;
-            ast->next->next=NULL;
-            x=eval(ast->next, env)->number;
-            tb_set_cursor(x, y);
-        }
-    }
-    return NULL;
-}
+// cell *p_tb_set_clear_attrs(cell *ast, environment *env){
+//     int fg,bg;
+//     if(ast->next){
+//         if(ast->next->next){
+//             bg=eval(ast->next->next, env)->number;
+//             ast->next->next=NULL;
+//             fg=eval(ast->next, env)->number;
+//             tb_set_cursor(fg, bg);
+//         }
+//     }
+//     return NULL;
+// }
 
-cell *p_tb_hide_cursor(cell *ast, environment *env){
-    tb_hide_cursor();
-    return NULL;
-}
+// cell *p_tb_present(cell *ast, environment *env){
+//     tb_present();
+//     return NULL;
+// }
 
-cell *p_tb_print(cell *ast, environment *env){
-    int x, y, fg, bg;
-    cell *temp=NULL;
-    cell *text=NULL;
-    if(ast->next){
-        if(ast->next->next){
-            if(ast->next->next->next){
-                if(ast->next->next->next->next){
-                    if(ast->next->next->next->next->next){
-                        text=eval(ast->next->next->next->next->next, env);
-                        temp=ast->next->next->next->next;
-                        temp->next=NULL;
-                        bg=eval(temp, env)->number;
-                        temp=ast->next->next->next;
-                        temp->next=NULL;
-                        fg=eval(temp, env)->number;
-                        temp=ast->next->next;
-                        temp->next=NULL;
-                        y=eval(temp, env)->number;
-                        temp=ast->next;
-                        temp->next=NULL;
-                        x=eval(temp, env)->number;
-                        tb_print(x, y, fg, bg, text->symbol);
-                    }
-                }
-            }
-        }
-    }
-    return NULL;
-}
+// cell *p_tb_set_cursor(cell *ast, environment *env){
+//     int x,y;
+//     if(ast->next){
+//         if(ast->next->next){
+//             y=eval(ast->next->next, env)->number;
+//             ast->next->next=NULL;
+//             x=eval(ast->next, env)->number;
+//             tb_set_cursor(x, y);
+//         }
+//     }
+//     return NULL;
+// }
 
-#endif
+// cell *p_tb_hide_cursor(cell *ast, environment *env){
+//     tb_hide_cursor();
+//     return NULL;
+// }
+
+// cell *p_tb_print(cell *ast, environment *env){
+//     int x, y, fg, bg;
+//     cell *temp=NULL;
+//     cell *text=NULL;
+//     if(ast->next){
+//         if(ast->next->next){
+//             if(ast->next->next->next){
+//                 if(ast->next->next->next->next){
+//                     if(ast->next->next->next->next->next){
+//                         text=eval(ast->next->next->next->next->next, env);
+//                         temp=ast->next->next->next->next;
+//                         temp->next=NULL;
+//                         bg=eval(temp, env)->number;
+//                         temp=ast->next->next->next;
+//                         temp->next=NULL;
+//                         fg=eval(temp, env)->number;
+//                         temp=ast->next->next;
+//                         temp->next=NULL;
+//                         y=eval(temp, env)->number;
+//                         temp=ast->next;
+//                         temp->next=NULL;
+//                         x=eval(temp, env)->number;
+//                         tb_print(x, y, fg, bg, text->symbol);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     return NULL;
+// }
+
+// //int tb_poll_event(struct tb_event *event);
+// cell *p_tb_getkey(cell *ast, environment *env){
+//     if(tb_poll_event(&tb_ev)==TB_OK){
+//         while (tb_poll_event(&tb_ev) == TB_OK) {
+//             switch (tb_ev.type) {
+//             case TB_EVENT_KEY:
+//                 char *c=(char *)GC_malloc(sizeof(char)*2);
+//                 c[1]=0;
+//                 c[0]=tb_ev.key;
+//                 return newcell(serialctr++, c, c[0], string);
+//                 break;
+//             case TB_EVENT_RESIZE:
+//                 tb_clear();
+//                 // pretty_print_resize(&ev);
+//                 tb_present();
+//                 break;
+//             default:
+//                 break;
+//             }
+//         }
+
+//     }
+// }
+
+// #endif
 
 /* symbol operators */
 
@@ -958,16 +987,18 @@ cell *f_string_append(cell *ast, environment *env){
         cl->next=NULL;
         cl=eval(cl, env);
         if(cl->contents && !cl->next) cl=cl->contents;
-        morel=strlen(cl->symbol);
-        str2=(char *)GC_malloc(morel + strl + 1);
-        if(strl>0){
-            strcpy(str2, str1);
-            strcat(str2, cl->symbol);
-        } else {
-            strcpy(str2, cl->symbol);
+        if(cl->symbol){
+            morel=strlen(cl->symbol);
+            str2=(char *)GC_malloc(morel + strl + 1);
+            if(strl>0){
+                strcpy(str2, str1);
+                strcat(str2, cl->symbol);
+            } else {
+                strcpy(str2, cl->symbol);
+            }
+            strl+=morel;
+            str1=str2;
         }
-        strl+=morel;
-        str1=str2;
         s=s->next;
     }
     if(strl>0) return newcell(serialctr++, str1, 0, string);
