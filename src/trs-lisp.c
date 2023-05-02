@@ -620,6 +620,20 @@ void initPrimitives(){
     addprim("noop", p_pass)
     addprim("strcmp", p_strcmp)
     addprim("type", p_type)
+
+#ifdef TEXTBOX2
+    addprim("tb_init", p_tb_init)
+    addprim("tb_shutdown", p_tb_shutdown)
+    addprim("tb_height", p_tb_height)
+    addprim("tb_width", p_tb_width)
+    addprim("tb_clear", p_tb_clear)
+    addprim("tb_set_clear_attrs", p_tb_set_clear_attrs)
+    addprim("tb_present", p_tb_present)
+    addprim("tb_set_cursor", p_tb_set_cursor)
+    addprim("tb_hide_cursor", p_tb_hide_cursor)
+    addprim("tb_print", p_tb_print)
+#endif
+
 #else
 
 #endif

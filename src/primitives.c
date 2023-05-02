@@ -213,6 +213,100 @@ cell *p_type(cell *ast, environment *env){
     return NULL;
 }
 
+/* TEXTBOX 2 procedures */
+#ifdef TEXTBOX2
+
+cell *p_tb_init(cell *ast, environment *env){
+    tb_init();
+    return NULL;
+}
+cell *p_tb_shutdown(cell *ast, environment *env){
+    tb_shutdown();
+    return NULL;
+}
+
+cell *p_tb_width(cell *ast, environment *env){
+    return newcell(serialctr++, NULL, tb_width(), number);
+}
+
+cell *p_tb_height(cell *ast, environment *env){
+    return newcell(serialctr++, NULL, tb_height(), number);
+}
+
+cell *p_tb_clear(cell *ast, environment *env){
+    tb_clear();
+    return NULL;
+}
+
+cell *p_tb_set_clear_attrs(cell *ast, environment *env){
+    int fg,bg;
+    if(ast->next){
+        if(ast->next->next){
+            bg=eval(ast->next->next, env)->number;
+            ast->next->next=NULL;
+            fg=eval(ast->next, env)->number;
+            tb_set_cursor(fg, bg);
+        }
+    }
+    return NULL;
+}
+
+cell *p_tb_present(cell *ast, environment *env){
+    tb_present();
+    return NULL;
+}
+
+cell *p_tb_set_cursor(cell *ast, environment *env){
+    int x,y;
+    if(ast->next){
+        if(ast->next->next){
+            y=eval(ast->next->next, env)->number;
+            ast->next->next=NULL;
+            x=eval(ast->next, env)->number;
+            tb_set_cursor(x, y);
+        }
+    }
+    return NULL;
+}
+
+cell *p_tb_hide_cursor(cell *ast, environment *env){
+    tb_hide_cursor();
+    return NULL;
+}
+
+cell *p_tb_print(cell *ast, environment *env){
+    int x, y, fg, bg;
+    cell *temp=NULL;
+    cell *text=NULL;
+    if(ast->next){
+        if(ast->next->next){
+            if(ast->next->next->next){
+                if(ast->next->next->next->next){
+                    if(ast->next->next->next->next->next){
+                        text=eval(ast->next->next->next->next->next, env);
+                        temp=ast->next->next->next->next;
+                        temp->next=NULL;
+                        bg=eval(temp, env)->number;
+                        temp=ast->next->next->next;
+                        temp->next=NULL;
+                        fg=eval(temp, env)->number;
+                        temp=ast->next->next;
+                        temp->next=NULL;
+                        y=eval(temp, env)->number;
+                        temp=ast->next;
+                        temp->next=NULL;
+                        x=eval(temp, env)->number;
+                        tb_print(x, y, fg, bg, text->symbol);
+                    }
+                }
+            }
+        }
+    }
+    return NULL;
+}
+
+#endif
+
 /* symbol operators */
 
 cell *f_add(cell *ast, environment *env){

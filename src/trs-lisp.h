@@ -24,6 +24,12 @@
 #include <unistd.h>
 #include <gc.h>
 
+#define TEXTBOX2
+
+#ifdef TEXTBOX2
+#include "termbox2.h"
+#endif
+
 #define R5RS_PRIMITIVES
 
 #define DEBUG
