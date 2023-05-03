@@ -29,114 +29,114 @@ cell *p_ansi_reset(cell *ast, environment *env){
     return NULL;
 }
 
-// cell *p_ansi(cell *ast, environment *env){
-//     printf("\x1b[");
-//     return NULL;
-// }
+cell *p_ansi(cell *ast, environment *env){
+    printf("\x1b[");
+    return NULL;
+}
 
-// cell *p_ansi_home(cell *ast, environment *env){
-//     printf("\x1b[H");
-//     return NULL;
-// }
+cell *p_ansi_home(cell *ast, environment *env){
+    printf("\x1b[H");
+    return NULL;
+}
 
-// cell *p_ansi_clear(cell *ast, environment *env){
-//     printf("\x1b[2J");
-//     return NULL;
-// }
+cell *p_ansi_clear(cell *ast, environment *env){
+    printf("\x1b[2J");
+    return NULL;
+}
 
-// cell *p_ansi_fg(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[0;%dm", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_fg(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[0;%dm", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_up(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[%dA", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_up(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dA", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_dn(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[%dB", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_dn(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dB", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_rt(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[%dC", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_rt(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dC", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_lt(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[%dD", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_lt(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dD", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_col(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[%dG", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_col(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dG", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_next(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[%dE", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_next(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dE", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_prev(cell *ast, environment *env){
-//     int a=0;
-//     if(ast->next){
-//         a=eval(ast->next, env)->number;
-//         printf("\x1b[%dF", a);
-//     }
-//     return NULL;
-// }
+cell *p_ansi_prev(cell *ast, environment *env){
+    int a=0;
+    if(ast->next){
+        a=eval(ast->next, env)->number;
+        printf("\x1b[%dF", a);
+    }
+    return NULL;
+}
 
-// cell *p_ansi_pos(cell *ast, environment *env){
-//     int a=0;
-//     int b=0;
-//     if(ast->next){
-//         if(ast->next->next){
-//             b=eval(ast->next->next, env)->number;
-//             ast->next->next=NULL;
-//             a=eval(ast->next, env)->number;
-//             printf("\x1b[%d;%dH", a);
-//         }
-//     }
-//     return NULL;
-// }
+cell *p_ansi_pos(cell *ast, environment *env){
+    int a=0;
+    int b=0;
+    if(ast->next){
+        if(ast->next->next){
+            b=eval(ast->next->next, env)->number;
+            ast->next->next=NULL;
+            a=eval(ast->next, env)->number;
+            printf("\x1b[%d;%dH", a);
+        }
+    }
+    return NULL;
+}
 
-// cell *p_print_int(cell *ast, environment *env){
-//     if(ast->next){
-//         cell *cl=eval(ast->next, env);
-//         printf("%d", cl->number);
-//     }
-//     return NULL;
-// }
+cell *p_print_int(cell *ast, environment *env){
+    if(ast->next){
+        cell *cl=eval(ast->next, env);
+        printf("%d", cl->number);
+    }
+    return NULL;
+}
 
 
 cell *p_define_function(cell *ast, environment *env){
@@ -201,6 +201,12 @@ cell *p_type(cell *ast, environment *env){
             break;
         case string:
             return newcell(serialctr++, "string", 0, string);
+            break;
+        case character:
+            return newcell(serialctr++, "character", 0, string);
+            break;
+        case escape:
+            return newcell(serialctr++, "escape", 0, string);
             break;
         case symbol:
             return newcell(serialctr++, "symbol", 0, string);
@@ -667,7 +673,7 @@ bool eqv(cell *a, cell *b){
     if(!a->contents){
         if(!b->contents){
             if(a->type!=b->type) return false;
-            if((a->type==symbol || a->type==string || a->type==boolean) && strcmp(a->symbol, b->symbol)) return false;
+            if((a->type==symbol || a->type==string || a->type==character || a->type==boolean) && strcmp(a->symbol, b->symbol)) return false;
             if(a->type==number && a->number!=b->number) return false;
         }
     } else {
@@ -715,7 +721,7 @@ cell *f_eq(cell *ast, environment *env){
 
 cell *f_define(cell *ast, environment *env){
     if(ast->next){
-        if(ast->next->type==symbol || ast->next->type==string){
+        if(ast->next->type==symbol || ast->next->type==string || ast->next->type==character){
             if(ast->next->next){
                 cell *val=ast->next->next;
                 cell *n=ast->next;
@@ -756,7 +762,11 @@ cell *f_define_syntax(cell *ast, environment *env){
 cell *f_display(cell *ast, environment *env){
     if(ast->next){
         cell *cl=eval(ast->next, env);
-        printf("%s", cl->symbol);
+        if(cl->type==escape){
+            printf("\\033[%s", cl->symbol);
+        } else {
+            printf("%s", cl->symbol);
+        }
     }
     return NULL;
 }
@@ -771,17 +781,29 @@ cell *f_do(cell *ast, environment *env){
     cell *command=NULL;
     if(ast->next){
         if(ast->next->contents){
-                vars=ast->next->contents;
+            vars=ast->next->contents;
             if(ast->next->next){
                 if(ast->next->next->contents){
                     test=copyCellDeep(ast->next->next->contents);
                     iftrue=test->next;
                     test->next=NULL;     
+                }else {
+                    printf("\nERROR: Do has no finish condition: %s\n", getStringfromAST(ast));
+                    exit(1);
                 }
+            } else {
+                printf("\nERROR: Do has no finish condition: %s\n", getStringfromAST(ast));
+                exit(1);
             }
             if(ast->next->next->next){
                 command=ast->next->next->next;
+            }else {
+                printf("\nERROR: Do has no body: %s\n", getStringfromAST(ast));
+                exit(1);
             }
+        }else {
+            printf("\nERROR: Do has no variable initiation: %s\n", getStringfromAST(ast));
+            exit(1);
         }
     }
     if(vars && test && command){
@@ -839,7 +861,7 @@ cell *f_integer_to_char(cell *ast, environment *env){
         char buff[2];
         buff[0]=(char )c;
         buff[1]=0;
-        cell *cl=newcell(serialctr++, buff, c, string);
+        cell *cl=newcell(serialctr++, buff, c, character);
         return cl;
     }
     return NULL;
@@ -853,7 +875,7 @@ cell *f_integer_to_string(cell *ast, environment *env){
             sprintf(buf, "%d", (int )cl->number);
             return newcell(serialctr++, buf, cl->number, string);
         }
-        return cl;
+        return newcell(serialctr++, cl, 0, string);
     }
     return NULL;
 }
@@ -940,21 +962,29 @@ cell *f_read_char(cell *ast, environment *env){
     c[1]=0;
     if(!ast->next){
         static struct termios oldt, newt;
+        valtype typ=character;
         tcgetattr( STDIN_FILENO, &oldt);
         newt = oldt;
         newt.c_lflag &= ~(ICANON | ECHO);          
         tcsetattr( STDIN_FILENO, TCSANOW, &newt);
         c[0]=getchar();
-        printf("%i",c[0]);
+        if(c[0]==27){
+            c[0]=getchar();
+            if(c[0]==91){
+                c[0]=getchar();
+                typ=escape;
+            }
+        }
+        // printf("%i",c[0]);
         tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
-        cell *cl=newcell(serialctr++, c, c[0], string);
+        cell *cl=newcell(serialctr++, c, c[0], typ);
         return cl;
     } else {
         cell *st=eval(ast->next, env);
         if(st->type==stream){
             int ci=fgetc(st->stream);
             c[0]=(char )ci;
-            return newcell(serialctr++, c, c[0], string);
+            return newcell(serialctr++, c, c[0], character);
         }
     }
     return NULL;

@@ -75,6 +75,7 @@ token getNextToken(){
             c=getnxch();
             nc=peeknxch();
         }
+        if(symbolix==1) t.type=tcharacter;
         t.symbol[symbolix]=0;
         break;
     case '-': case '1': case '2': case '3': case '4': case '5':
@@ -162,7 +163,7 @@ char *getStringfromAST(cell *ast){
         if(temp) strcat(contained, temp);
         strcat(contained,")");
     }else{
-        if(ast->type==string){
+        if(ast->type==string || ast->type==character){
             contained=GC_malloc(strlen(ast->symbol)+3);
             contained[0]='"';
             strcat(contained,ast->symbol);
@@ -426,6 +427,9 @@ cell *parse(){
         case tstring:
             node=newcell(serialctr++, t.symbol, 0, string);
             break;
+        case tcharacter:
+            node=newcell(serialctr++, t.symbol, 0, character);
+            break;
         case tboolean:
             node=newcell(serialctr++, t.symbol, 0, boolean);
             break;
@@ -615,6 +619,19 @@ void initPrimitives(){
 
     addprim("ansi-code", p_ansi_code)
     addprim("ansi-reset", p_ansi_reset)
+    addprim("", p_ansi)
+    addprim("", p_print_int)
+    addprim("", p_ansi_home)
+    addprim("", p_ansi_clear)
+    addprim("", p_ansi_fg)
+    addprim("", p_ansi_up)
+    addprim("", p_ansi_dn)
+    addprim("", p_ansi_rt)
+    addprim("", p_ansi_lt)
+    addprim("", p_ansi_col)
+    addprim("", p_ansi_next)
+    addprim("", p_ansi_prev)
+    addprim("", p_ansi_pos)
     addprim("define-function", p_define_function)
     addprim("exit", p_exit)
     addprim("noop", p_pass)
@@ -805,7 +822,7 @@ cell *eval(cell *ast, environment *env){
             }
         }
         break;
-    case number: case string: case boolean:
+    case number: case string: case character: case boolean:
         break;
     default:
         cell *contentsresult=eval(ast->contents, env);
