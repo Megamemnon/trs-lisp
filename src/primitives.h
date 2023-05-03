@@ -18,6 +18,7 @@
 
 extern long serialctr;
 
+cell *p_termsize(cell *ast, environment *env);
 cell *p_ansi_code(cell *ast, environment *env);
 cell *p_ansi_reset(cell *ast, environment *env);
 cell *p_ansi(cell *ast, environment *env);

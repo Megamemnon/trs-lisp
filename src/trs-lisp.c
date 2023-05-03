@@ -619,23 +619,24 @@ void initPrimitives(){
 
     addprim("ansi-code", p_ansi_code)
     addprim("ansi-reset", p_ansi_reset)
-    addprim("", p_ansi)
-    addprim("", p_print_int)
-    addprim("", p_ansi_home)
-    addprim("", p_ansi_clear)
-    addprim("", p_ansi_fg)
-    addprim("", p_ansi_up)
-    addprim("", p_ansi_dn)
-    addprim("", p_ansi_rt)
-    addprim("", p_ansi_lt)
-    addprim("", p_ansi_col)
-    addprim("", p_ansi_next)
-    addprim("", p_ansi_prev)
-    addprim("", p_ansi_pos)
+    addprim("ansi", p_ansi)
+    addprim("print-int", p_print_int)
+    addprim("ansi-home", p_ansi_home)
+    addprim("ansi-clear", p_ansi_clear)
+    addprim("ansi-fg", p_ansi_fg)
+    addprim("ansi-up", p_ansi_up)
+    addprim("ansi-dn", p_ansi_dn)
+    addprim("ansi-rt", p_ansi_rt)
+    addprim("ansi-lt", p_ansi_lt)
+    addprim("ansi-col", p_ansi_col)
+    addprim("ansi-next", p_ansi_next)
+    addprim("ansi-prev", p_ansi_prev)
+    addprim("ansi-pos", p_ansi_pos)
     addprim("define-function", p_define_function)
     addprim("exit", p_exit)
     addprim("noop", p_pass)
     addprim("strcmp", p_strcmp)
+    addprim("get-term-size", p_termsize)
     addprim("type", p_type)
 
 #ifdef TERMBOX2
@@ -953,6 +954,8 @@ int main(int argc, char const *argv[])
 {
     GC_init();
     initPrimitives();
+    // static struct termios oldt;
+    // tcgetattr( STDIN_FILENO, &oldt);
     printf("trs-lisp \nCopyright (c) 2023 Brian O'Dell\n");
     environment *env=newenvironment(NULL);
 #ifdef DEBUG
@@ -971,6 +974,8 @@ int main(int argc, char const *argv[])
         argcounter++;
     }
 #endif
+    // tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
+
     repl(env);
     return 0;
 }

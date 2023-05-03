@@ -15,6 +15,13 @@
 #include "primitives.h"
 
 /* custom operators*/
+struct winsize termsize;
+cell *p_termsize(cell *ast, environment *env){
+    ioctl(STDOUT_FILENO, TIOCGWINSZ ,&termsize);
+    bindVar("termx", newcell(serialctr++, NULL, termsize.ws_col, number), env);
+    bindVar("termy", newcell(serialctr++, NULL, termsize.ws_row, number), env);
+    return NULL;
+}
 
 cell *p_ansi_code(cell *ast, environment *env){
     if(ast->next){
@@ -124,7 +131,7 @@ cell *p_ansi_pos(cell *ast, environment *env){
             b=eval(ast->next->next, env)->number;
             ast->next->next=NULL;
             a=eval(ast->next, env)->number;
-            printf("\x1b[%d;%dH", a);
+            printf("\x1b[%d;%df", a);
         }
     }
     return NULL;
@@ -875,7 +882,7 @@ cell *f_integer_to_string(cell *ast, environment *env){
             sprintf(buf, "%d", (int )cl->number);
             return newcell(serialctr++, buf, cl->number, string);
         }
-        return newcell(serialctr++, cl, 0, string);
+        return newcell(serialctr++, cl->symbol, 0, string);
     }
     return NULL;
 }

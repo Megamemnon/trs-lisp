@@ -1,0 +1,6 @@
+(define ch "X")
+(do ((i 0 (+ i 1)))
+    ((> i 9) (display "done"))
+    (begin (set! ch (read-char))
+           (display ch)
+           (newline)))

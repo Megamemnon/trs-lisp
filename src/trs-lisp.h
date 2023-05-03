@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <termios.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 #include <gc.h>
 
 // #define TERMBOX2
