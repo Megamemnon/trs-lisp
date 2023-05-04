@@ -342,6 +342,22 @@ resolution *resolve(cell *a, cell *b){
     return r;
 }
 
+cell *getnextmatchingatom(cell *a, cell *b){
+    cell *match=NULL;
+    if(!strcmp(a->symbol, b->symbol)){
+        match=copyCellDeep(b);
+        match->next=NULL;
+        return match;
+    }
+    if(b->contents){
+        return getnextmatchingatom(a, b->contents);
+    }
+    if(b->next){
+        return getnextmatchingatom(a, b->next);
+    }
+    return NULL;
+}
+
 void replaceNode(cell *expr, cell *rplc, cell *ast){
     if(ast->contents){
         if(ast->contents->serial==expr->serial){
@@ -693,26 +709,40 @@ cell *applyMacros(cell *ast, environment *env){
             before=getStringfromAST(cl);
             macro *m=macros;
             while(m){
-                resolution *res=resolve(m->expression, cl);
-                resolution *r=res;
-                while (r){
-                    cell *expansion=copyCellDeep(m->expansion);
-                    unifier *u=r->unifier;
-                    if(u){
-                        while(u){
-                            unifier *u0=copyUnifierShallow(u);
-                            u0->next=NULL;
-                            applyUnifier(expansion, u0);
-                            u=u->next;
+                if(m->expression->next){
+                    // Macro includes Meta Variables
+                    resolution *res=resolve(m->expression, cl);
+                    resolution *r=res;
+                    while (r){
+                        cell *expansion=copyCellDeep(m->expansion);
+                        unifier *u=r->unifier;
+                        if(u){
+                            while(u){
+                                unifier *u0=copyUnifierShallow(u);
+                                u0->next=NULL;
+                                applyUnifier(expansion, u0);
+                                u=u->next;
+                            }
+                        }
+                        changed=true;
+                        if(r->matchedcell->serial==cl->serial){
+                            cl=expansion;
+                        } else {
+                            replaceNode(r->matchedcell, expansion, cl);
+                        }
+                        r=r->next;
+                    }
+                } else {
+                    // Macro has no Meta Variables
+                    cell *match=getnextmatchingatom(m->expression, cl);
+                    while(match){
+                        if(match->serial==cl->serial){
+                            cl=m->expansion;
+                        } else {
+                            replaceNode(match, m->expansion, cl);
                         }
                     }
-                    changed=true;
-                    if(r->matchedcell->serial==cl->serial){
-                        cl=expansion;
-                    } else {
-                        replaceNode(r->matchedcell, expansion, cl);
-                    }
-                    r=r->next;
+
                 }
                 m=m->next;
             }
