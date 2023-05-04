@@ -42,6 +42,27 @@ R5RS describes **define-syntax** as <code>(define-syntax {keyword} {transformer}
 - - - The modified function Expansion is, itself, evaluated  
 - - Unmatched Symbols evaluate to themselves  
 
+### Variables
+
+Macros and Functions may contain Meta Variables in their signature expression. These must start with a capital letter. These Meta Variables are bound with the invoking code's terms that correspond with placement of the Meta Variables. We'll always refer to these variables as Meta Variables.  
+
+(Plain Ol') Variables are stored in the Environment along with a copy of their bound value. These Variables are created by the **define** procedure and, once created in the environment, may be updated with the **set!** procedure.  
+
+Variables are dynamically typed in the sense that they can be bound to any term and this type is returned by the **type** procedure. It's actually the bound value which has the type of interest. Variables themselves will either be of type **symbol** or **string** depending on whether you enclose the variable name in double-quotes.  
+
+The following types are supported:  
+
+| Type | Description |
+| --- | --- |
+| symbol | a symbol |
+| string | a string of characters |
+| character | a single character |
+| escape | an ansi escape character |
+| number | a floating point number |
+| boolean | either #t or #f |
+| stream | contains a pointer to a file stream |
+| nil | used internally to identify cells which contain another cell but have no information themselves |
+
 ### Primitives
 The following procedures - unique to trs-lisp - are implemented as primitives in order to facilitate implentation of user functions and macros:  
 
@@ -51,11 +72,19 @@ The following procedures - unique to trs-lisp - are implemented as primitives in
 | --- | --- | --- | 
 | **ansi-code** | nil | print ansi escape sequence "\033[" and A |
 | **ansi-reset** | nil | prints ansi escape sequence for reset |
+| **ansi-clear** | nil | clears terminal screen |
+| **ansi-home** | nil | moves cursor to home position |
+| **ansi-fg** | nil | sets foreground color to A |
+| **ansi-up** | nil | moves cursor up A count |
+| **ansi-dn** | nil | moves cursor down A count |
+| **ansi-lt** | nil | moves cursor left A count |
+| **ansi-rt** | nil | moves cursor right A count |
 | **define-function** | nil | separated from R5RS's define can be used to define both Variables and Functions |
 | **exit** | nil | exits with no error |
 | **noop** | nil | do nothing |
 | **strcmp** | number | returns the result of a C strcmp of A and B |
-| **Type** |string | returns the type of its first argument as a string |
+| **termsize** | nil | defines and populates variables **termx** (terminal column count) and **termy** (terminal row count) in current environment |
+| **type** |string | returns the type of its first argument as a string |
 
 The following R5RS procedures are implemented as primitive operators:  
 
