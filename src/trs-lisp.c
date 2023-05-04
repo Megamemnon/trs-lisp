@@ -344,10 +344,12 @@ resolution *resolve(cell *a, cell *b){
 
 cell *getnextmatchingatom(cell *a, cell *b){
     cell *match=NULL;
-    if(!strcmp(a->symbol, b->symbol)){
-        match=copyCellDeep(b);
-        match->next=NULL;
-        return match;
+    if(b->symbol){
+        if(!strcmp(a->symbol, b->symbol)){
+            match=copyCellDeep(b);
+            match->next=NULL;
+            return match;
+        }
     }
     if(b->contents){
         return getnextmatchingatom(a, b->contents);
@@ -741,8 +743,8 @@ cell *applyMacros(cell *ast, environment *env){
                         } else {
                             replaceNode(match, m->expansion, cl);
                         }
+                        match=getnextmatchingatom(m->expression, cl);
                     }
-
                 }
                 m=m->next;
             }
@@ -828,7 +830,7 @@ cell *eval(cell *ast, environment *env){
                 cell *opresult= p->f(ast, env);
                 return opresult;
             } else {
-                if(ast->next){
+                // if(ast->next){ // removed to enable functions without Meta Variables
                     macro *f=getFunction(ast->symbol);
                     if(f){
                         // cell *cl=applyFunctions(ast, env);
@@ -849,7 +851,7 @@ cell *eval(cell *ast, environment *env){
                         }
                         return eval(exp, env);
                     }
-                }
+                // }
             }
         }
         break;
@@ -966,15 +968,15 @@ void repl(environment *env){
     while(!abort){
         printf("\n> ");
         fgets(in, INPUT_BUFFER_LENGTH, stdin);
-        if(strcmp(in, "(exit)\n")){
+        // if(strcmp(in, "(exit)\n")){
             srcln=strlen(in);
             src=(char *)GC_malloc(srcln+1);
             strcpy(src, in);
             srcix=0;
             interpret(env);
-        }else{
-            abort=true;
-        }
+        // }else{
+            // abort=true;
+        // }
     }
 }
 

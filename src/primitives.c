@@ -914,7 +914,7 @@ cell *f_list(cell *ast, environment *env){
 cell *f_load(cell *ast, environment *env){
     if(ast->next){
         if(ast->type==string || ast->type==symbol){
-            loadfile(ast->symbol, env);
+            loadfile(ast->next->symbol, env);
         }
     }
     return NULL;

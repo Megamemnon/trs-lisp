@@ -1,0 +1,22 @@
+(comment libedit)
+(define-function    backspace?
+                    (backspace? C)
+                    (= C 127))
+(define-function    carriage-return?
+                    (carriage-return? C)
+                    (= C 13))
+(define-function    backspace
+                    (backspace)
+                    (begin  (ansi-lt 1)
+                            (display " ")
+                            (ansi-lt 1)))
+(define-function    init-editor
+                    (editinit)
+                    (begin  (define ch "X")
+                            (get-term-size)
+                            (ansi-fg 31)
+                            (ansi-clear)
+                            (ansi-home)
+                            (display "trs-lisp editor")
+                            (ansi-dn 1)
+                            (ansi-lt 999)))
