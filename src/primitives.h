@@ -40,21 +40,6 @@ cell *p_pass(cell *ast, environment *env);
 cell *p_strcmp(cell *ast, environment *env);
 cell *p_type(cell *ast, environment *env);
 
-// #ifdef TERMBOX2
-// cell *p_tb_init(cell *ast, environment *env);
-// cell *p_tb_shutdown(cell *ast, environment *env);
-// cell *p_tb_width(cell *ast, environment *env);
-// cell *p_tb_height(cell *ast, environment *env);
-// cell *p_tb_clear(cell *ast, environment *env);
-// cell *p_tb_set_clear_attrs(cell *ast, environment *env);
-// cell *p_tb_present(cell *ast, environment *env);
-// cell *p_tb_set_cursor(cell *ast, environment *env);
-// cell *p_tb_hide_cursor(cell *ast, environment *env);
-// cell *p_tb_print(cell *ast, environment *env);
-// cell *p_tb_getkey(cell *ast, environment *env);
-// #endif
-
-
 cell *f_add(cell *ast, environment *env);
 cell *f_sub(cell *ast, environment *env);
 cell *f_mul(cell *ast, environment *env);

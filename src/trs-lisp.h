@@ -25,8 +25,6 @@
 #include <sys/ioctl.h>
 #include <gc.h>
 
-// #define TERMBOX2
-
 #define R5RS_PRIMITIVES
 
 #define DEBUG
